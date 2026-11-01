@@ -1,0 +1,203 @@
+
+# Practical 6: GitHub Desktop — Clone, Fork, Branch, Pull Request
+
+## Aim
+To clone and fork an AI project repository, create a feature branch named `GIT-EXAM`, make changes, submit a pull request, and learn how to resolve merge conflicts.
+
+## Requirements
+- A computer with internet access
+- A GitHub account
+- GitHub Desktop installed
+- Repository: `https://github.com/KalyanM45/AI-Project-Gallery.git`
+
+---
+
+## A. Clone the repository
+
+**Clone** means downloading a copy of the project to your computer.
+
+1. Open **GitHub Desktop**.
+2. At the top-left, click **File**.
+3. Click **Clone Repository…**
+4. In the window that opens, click the **URL** tab.
+5. In the box named **Repository URL**, paste:
+
+   `https://github.com/KalyanM45/AI-Project-Gallery.git`
+
+6. Find **Local Path**. This is the place on your computer where the project will be saved.
+7. Click **Choose…** next to Local Path.
+8. In the folder window, click **Desktop** on the left.
+9. Click **Select Folder**.
+10. Back in GitHub Desktop, click **Clone**.
+
+GitHub Desktop will download the project into a folder on your Desktop. Wait until cloning finishes.
+
+---
+
+## B. Demonstrate that branch creation is disallowed
+
+**Important:** Creating a branch on your own computer is usually allowed. What may be disallowed is pushing a branch to the original repository because you do not have permission.
+
+1. In GitHub Desktop, look near the top for **Current Branch**.
+2. Click **Current Branch**.
+3. Click **New Branch**.
+4. Type `GIT-EXAM`.
+5. Click **Create Branch**.
+
+This creates a branch on your computer. To demonstrate the permission restriction, try pushing a branch to the original repository. If you do not have write permission, GitHub will reject the push.
+
+If your teacher specifically expects a failed branch-creation attempt, show the permission message that appears in your lab environment. Do not say that creating a local branch is impossible if GitHub Desktop allows it.
+
+---
+
+## C. Fork the repository
+
+**Fork** means making your own copy of the project on your GitHub account.
+
+1. Open this link in your browser:  
+   `https://github.com/KalyanM45/AI-Project-Gallery`
+2. Sign in to GitHub if asked.
+3. Click **Fork** near the top-right.
+4. Under **Owner**, select your own GitHub account.
+5. Click **Create fork**.
+6. Wait for GitHub to open your copy of the repository.
+
+---
+
+## D. Clone your fork and create the feature branch
+
+1. On your fork’s GitHub page, click the green **Code** button.
+2. Copy the HTTPS URL shown there. It should be your username followed by `/AI-Project-Gallery.git`.
+3. Open GitHub Desktop.
+4. Click **File → Clone Repository… → URL**.
+5. Paste the URL you copied from **your fork** into **Repository URL**.
+6. Under **Local Path**, click **Choose…**.
+7. Click **Desktop** on the left, then click **Select Folder**.
+8. Click **Clone**.
+9. In GitHub Desktop, click **Current Branch → New Branch**.
+10. Type `GIT-EXAM`.
+11. Click **Create Branch**.
+
+Make sure the branch name shown near the top is `GIT-EXAM`.
+
+---
+
+## E. Change or add code
+
+For a simple practical demonstration, make a small change to the README file.
+
+1. In GitHub Desktop, click **Repository → Show in Explorer**.  
+   This opens the project folder on your computer.
+2. Find the file named `README.md`.
+3. Right-click it and choose **Open with → Notepad**.  
+   If you do not see that option, open Notepad first, then use **File → Open** and select `README.md`.
+4. Add this line at the bottom:
+
+   `This change is for the GIT-EXAM practical.`
+
+5. In Notepad, click **File → Save**.
+6. Return to GitHub Desktop.
+7. You should see `README.md` listed under **Changes**.
+8. In the **Summary** box at the bottom-left, type:
+
+   `Update README for GIT-EXAM`
+
+9. Click **Commit to GIT-EXAM**.
+
+---
+
+## F. Push the branch and submit a pull request
+
+1. In GitHub Desktop, click **Push origin** near the top.
+2. Wait for the upload to finish.
+3. Open your fork in the web browser.
+4. If GitHub shows **Compare & pull request**, click it. Otherwise, open the **Pull requests** tab and click **New pull request**.
+5. Make sure the **base repository** is the original repository:  
+   `KalyanM45/AI-Project-Gallery`
+6. Make sure the **base branch** is `main` (or the default branch shown by GitHub).
+7. Make sure the **compare repository** is your fork.
+8. Make sure the **compare branch** is `GIT-EXAM`.
+9. Enter a title, such as `Changes for GIT-EXAM practical`.
+10. Enter a short description of your change.
+11. Click **Create pull request**.
+
+A pull request asks the original project owner to review your changes. It does not automatically mean the changes have been accepted.
+
+---
+
+## G. Resolve merge conflicts and incorporate feedback
+
+### If the reviewer requests changes
+1. Read the reviewer’s comments on the pull request.
+2. Open the project folder using **Repository → Show in Explorer** in GitHub Desktop.
+3. Edit the requested file.
+4. Save the file.
+5. Return to GitHub Desktop.
+6. Enter a commit message, such as `Apply review feedback`.
+7. Click **Commit to GIT-EXAM**.
+8. Click **Push origin**.
+
+The new commit will appear in the same pull request.
+
+### If a merge conflict occurs
+A merge conflict means Git cannot automatically combine two sets of changes.
+
+1. Open the conflicting file in a text editor.
+2. Look for conflict markers similar to:
+
+   ```text
+   <<<<<<< HEAD
+   one version of the content
+   =======
+   another version of the content
+   >>>>>>> branch-name
+   ```
+
+3. Decide which content should remain, or combine both versions.
+4. Delete the conflict-marker lines: `<<<<<<<`, `=======`, and `>>>>>>>`.
+5. Save the file.
+6. Return to GitHub Desktop.
+7. Commit the resolved file.
+8. Push the branch again and check the pull request.
+
+---
+
+## Result
+The AI project repository was cloned and forked. A feature branch named `GIT-EXAM` was created, a change was committed and pushed, and a pull request was submitted for review. Reviewer feedback and merge conflicts were addressed when required.
+
+---
+
+## Viva Questions and Answers
+
+**1. What is Git?**  
+Git is a version control system that tracks changes in files.
+
+**2. What is GitHub?**  
+GitHub is an online platform for storing and sharing Git repositories.
+
+**3. What is cloning?**  
+Cloning means downloading a copy of a repository to your computer.
+
+**4. What is forking?**  
+Forking means creating your own copy of another person’s repository on GitHub.
+
+**5. What is a branch?**  
+A branch is a separate line of work where we can make changes without directly changing the main branch.
+
+**6. What is a commit?**  
+A commit saves changes in the repository’s history.
+
+**7. What is pushing?**  
+Pushing uploads local commits to a remote repository on GitHub.
+
+**8. What is a pull request?**  
+A pull request asks the repository owner to review and possibly merge our changes.
+
+**9. What is a merge conflict?**  
+A merge conflict occurs when Git cannot automatically combine changes.
+
+**10. Why do we fork a repository?**  
+We fork it so we have our own copy where we can push changes.
+
+**11. Can we create a local branch without permission to the original repository?**  
+Yes. We can usually create a local branch, but pushing to the original repository requires write permission.
