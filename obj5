@@ -1,0 +1,267 @@
+
+# Practical 5: GitHub Desktop — Data Science Project
+
+## Aim
+To create a Git repository for a data science project, upload it to GitHub, create a branch, add Python programs, and use `.gitignore` to prevent a folder from being uploaded.
+
+## Before starting
+You need:
+- GitHub Desktop installed
+- A GitHub account
+- Python installed on your computer
+
+## A. Create a project folder
+
+1. Go to your computer’s **Desktop**.
+2. Right-click an empty area.
+3. Select **New → Folder**.
+4. Name the folder:
+
+   `DataScienceProject`
+
+5. Press **Enter**.
+
+## B. Create the Git repository using GitHub Desktop
+
+1. Open **GitHub Desktop**.
+2. Sign in to your GitHub account if asked.
+3. Click **File** at the top.
+4. Click **Add Local Repository…**
+5. Click **Choose…**.
+6. Select **Desktop → DataScienceProject**.
+7. Click **Select Folder**.
+8. If GitHub Desktop says this folder is not a Git repository, click **create a repository**.
+9. In the **Create a New Repository** window:
+   - **Name:** `DataScienceProject`
+   - **Local Path:** choose your Desktop
+   - Leave the other options as they are.
+10. Click **Create Repository**.
+
+Your folder is now a Git repository. GitHub Desktop will track changes made inside it.
+
+## C. Push the repository to GitHub
+
+1. In GitHub Desktop, click **Publish repository** near the top.
+2. In the window that opens:
+   - **Name:** `DataScienceProject`
+   - If you see **Keep this code private**, leave it checked if you want the repository private.
+3. Click **Publish Repository**.
+4. Wait until the upload finishes.
+
+### Check that it uploaded
+1. In GitHub Desktop, click **Repository → View on GitHub**.
+2. Your repository should open in a browser.
+3. You may see an empty repository at this stage. That is okay.
+
+## D. Create the branch `GIT-EXAM-1`
+
+1. Return to GitHub Desktop.
+2. Click **Current Branch** near the top.
+3. Click **New Branch**.
+4. Type:
+
+   `GIT-EXAM-1`
+
+5. Click **Create Branch**.
+6. Check that the top of GitHub Desktop now shows `GIT-EXAM-1`.
+
+Make sure you are on this branch before creating the program files.
+
+## E. Create `program1.py`
+
+1. In GitHub Desktop, click **Repository → Show in Explorer**.
+2. A folder will open. This is your `DataScienceProject` folder.
+3. Right-click an empty area inside the folder.
+4. Select **New → Text Document**.
+5. Name it:
+
+   `program1.py`
+
+   If Windows asks whether you want to change the file extension, click **Yes**.
+
+6. Right-click `program1.py` and choose **Open with → Notepad**.
+7. Copy and paste this complete program:
+
+   ```python
+   for number in range(1, 11):
+       print(number, "square =", number * number)
+   ```
+
+8. In Notepad, click **File → Save**.
+9. Close Notepad.
+
+### Run program1.py
+1. Open **Command Prompt** or **PowerShell**.
+2. Type `cd ` (type `cd`, then one space).
+3. Drag the `DataScienceProject` folder from your Desktop into the terminal window.
+4. Press **Enter**.
+5. Type:
+
+   `py program1.py`
+
+6. Press **Enter**.
+
+You should see the squares of numbers from 1 to 10.
+
+## F. Create `program2` and write the palindrome program
+
+For a Python program, the file should have the `.py` extension. So create the file as **`program2.py`**.
+
+1. Open the `DataScienceProject` folder.
+2. Right-click an empty area.
+3. Select **New → Text Document**.
+4. Name it:
+
+   `program2.py`
+
+5. Right-click the file and select **Open with → Notepad**.
+6. Copy and paste this program:
+
+   ```python
+   text = input("Enter a word: ")
+
+   if text == text[::-1]:
+       print("It is a palindrome")
+   else:
+       print("It is not a palindrome")
+   ```
+
+7. Click **File → Save** and close Notepad.
+
+### Run program2.py
+1. Open Command Prompt or PowerShell.
+2. Go to the project folder as described in the previous section.
+3. Type:
+
+   `py program2.py`
+
+4. Press **Enter**.
+5. Enter a word such as `madam` and press **Enter**.
+
+The program should print `It is a palindrome`.
+
+## G. Commit and push the Python programs
+
+1. Open **GitHub Desktop**.
+2. You should see `program1.py` and `program2.py` under **Changes**.
+3. At the bottom-left, find the **Summary** box.
+4. Type:
+
+   `Add two Python programs`
+
+5. Click **Commit to GIT-EXAM-1**.
+6. Click **Push origin** near the top.
+7. Wait for the push to finish.
+
+### Check the files on GitHub
+1. In GitHub Desktop, click **Repository → View on GitHub**.
+2. On GitHub, select the `GIT-EXAM-1` branch if it is not already selected.
+3. Confirm that `program1.py` and `program2.py` are visible.
+
+## H. Create the `IGNORE` directory and its files
+
+1. Open the `DataScienceProject` folder.
+2. Right-click an empty area.
+3. Select **New → Folder**.
+4. Name the folder:
+
+   `IGNORE`
+
+5. Open the `IGNORE` folder.
+6. Right-click an empty area and select **New → Text Document**.
+7. Name the file `test1.txt`.
+8. Repeat to create `test2.txt`.
+9. Open each text file in Notepad, type any short text, and save it.
+
+Your project folder should now contain:
+
+```text
+DataScienceProject
+├── program1.py
+├── program2.py
+└── IGNORE
+    ├── test1.txt
+    └── test2.txt
+```
+
+## I. Create the `.gitignore` file
+
+1. Open the main `DataScienceProject` folder—not the `IGNORE` folder.
+2. Right-click an empty area.
+3. Select **New → Text Document**.
+4. Name the file:
+
+   `.gitignore`
+
+5. If Windows warns that changing the file extension may make it unusable, click **Yes**.
+6. Open `.gitignore` in Notepad.
+7. Paste this single line:
+
+   ```text
+   IGNORE/
+   ```
+
+8. Click **File → Save** and close Notepad.
+
+**Important:** The file must be named exactly `.gitignore`, not `.gitignore.txt`. If you cannot see file extensions in File Explorer:
+- Click **View → Show → File name extensions**.
+- Check the filename again.
+- If it is `.gitignore.txt`, rename it to `.gitignore`.
+
+## J. Commit and push the `.gitignore` file
+
+1. Open GitHub Desktop.
+2. Confirm that the current branch is `GIT-EXAM-1`.
+3. You should see `.gitignore` under **Changes**.
+4. The `IGNORE` folder and its two files should **not** appear in the changes list.
+5. In the **Summary** box, type:
+
+   `Add gitignore to exclude IGNORE folder`
+
+6. Click **Commit to GIT-EXAM-1**.
+7. Click **Push origin**.
+8. Wait for the push to finish.
+
+## K. Demonstrate that `IGNORE` was not pushed
+
+1. In GitHub Desktop, click **Repository → View on GitHub**.
+2. On GitHub, select the `GIT-EXAM-1` branch.
+3. Confirm that `program1.py`, `program2.py`, and `.gitignore` are visible.
+4. Confirm that the `IGNORE` folder is **not** visible.
+
+The `IGNORE` folder remains on your computer, but Git ignores it and does not upload it.
+
+## Result
+A Git repository was created and published to GitHub. The `GIT-EXAM-1` branch was created, two Python programs were added and pushed, and the `.gitignore` file was used to prevent the `IGNORE` directory and its files from being uploaded.
+
+## Viva Questions and Answers
+
+**1. What is Git?**  
+Git is a version control system used to track changes in files.
+
+**2. What is GitHub?**  
+GitHub is an online platform for storing and sharing Git repositories.
+
+**3. What is a repository?**  
+A repository is a project folder whose changes are tracked by Git.
+
+**4. What is a branch?**  
+A branch is a separate line of work where we can make changes.
+
+**5. What is a commit?**  
+A commit saves changes in the repository’s history.
+
+**6. What is pushing?**  
+Pushing uploads committed changes from our computer to GitHub.
+
+**7. What is `.gitignore`?**  
+`.gitignore` is a file that tells Git which untracked files or folders to ignore.
+
+**8. Why was `IGNORE/` added to `.gitignore`?**  
+It tells Git to ignore the `IGNORE` folder and its contents.
+
+**9. Does `.gitignore` delete the ignored files from the computer?**  
+No. The files remain on the computer; Git simply does not track them as new changes.
+
+**10. What is a palindrome?**  
+A palindrome is a word that reads the same forward and backward, such as `madam`.
