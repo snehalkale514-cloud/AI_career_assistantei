@@ -1,0 +1,106 @@
+
+# Practical 7: GitHub Desktop
+
+## Aim
+To clone a repository, create a fork, create a branch, make changes, raise a pull request, and understand repository permissions and conflicts using GitHub Desktop.
+
+## Requirements
+- GitHub account
+- GitHub Desktop installed
+- Internet connection
+- Repository: https://github.com/KalyanM45/Spam-Email-Detection.git
+
+## Procedure
+
+### 1. Clone the repository
+1. Open GitHub Desktop and sign in.
+2. Select **File → Clone Repository**.
+3. Open the **URL** tab.
+4. Paste the repository URL.
+5. Choose a local folder and click **Clone**.
+
+### 2. Demonstrate restricted access
+1. Try to publish or push a branch to the original repository.
+2. If you do not have write permission, GitHub will reject the push.
+3. Note: Creating a branch on your own computer is usually allowed. The restriction is generally on pushing changes to the original repository.
+
+### 3. Fork the repository
+1. Open the repository in a web browser.
+2. Click **Fork**.
+3. Select your GitHub account as the owner.
+4. Click **Create fork**.
+
+### 4. Clone your fork
+1. Open your fork on GitHub.
+2. Click **Code** and copy its URL.
+3. In GitHub Desktop, select **File → Clone Repository → URL**.
+4. Paste the fork URL, choose a local folder, and click **Clone**.
+
+### 5. Create the GIT-EXAM branch
+1. In GitHub Desktop, select **Current Branch**.
+2. Click **New Branch**.
+3. Enter `GIT-EXAM`.
+4. Click **Create Branch**.
+
+### 6. Make and commit a change
+1. Open the cloned project folder.
+2. Open `README.md` in a text editor.
+3. Add a line such as: `This change is for the GitHub practical.`
+4. Save the file.
+5. Return to GitHub Desktop.
+6. Enter a commit message, such as `Update README for practical`.
+7. Click **Commit to GIT-EXAM**.
+
+### 7. Push the branch
+1. Click **Push origin** in GitHub Desktop.
+2. Wait for the branch to upload to your fork.
+
+### 8. Create a pull request
+1. Open your fork on GitHub.
+2. Click **Compare & pull request**.
+3. Confirm that the base repository is the original repository and the base branch is `main`.
+4. Confirm that the compare branch is `GIT-EXAM`.
+5. Add a title and description.
+6. Click **Create pull request**.
+
+### 9. Review changes and resolve conflicts
+1. The repository owner or reviewer can review the pull request.
+2. If changes are requested, edit the file, commit the update, and push again.
+3. If a merge conflict occurs, open the conflicting file.
+4. Choose the correct content and remove conflict markers.
+5. Save the file, commit the resolution, and push the changes.
+
+## Result
+The repository was cloned and forked. A branch named `GIT-EXAM` was created, a change was committed and pushed, and a pull request was submitted to the original repository.
+
+## Viva Questions and Answers
+
+**1. What is Git?**  
+Git is a version control system used to track changes in files.
+
+**2. What is GitHub?**  
+GitHub is an online platform for storing and sharing Git repositories.
+
+**3. What is cloning?**  
+Cloning means copying a repository from GitHub to your computer.
+
+**4. What is forking?**  
+Forking means creating your own copy of another user’s repository on GitHub.
+
+**5. What is a branch?**  
+A branch is a separate line of work where changes can be made without directly changing the main branch.
+
+**6. What is a commit?**  
+A commit saves a set of changes in the repository’s history.
+
+**7. What is a pull request?**  
+A pull request asks the repository owner to review and merge your changes.
+
+**8. What is a merge conflict?**  
+A merge conflict happens when Git cannot automatically combine changes made to the same part of a file.
+
+**9. Why was the fork needed?**  
+The fork gives us a repository where we have permission to push our changes.
+
+**10. Can we create a local branch without permission to the original repository?**  
+Yes. Local branches can usually be created, but pushing to the original repository requires write permission.
