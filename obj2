@@ -1,0 +1,265 @@
+
+# Practical 2: Git Bash — Even/Odd and String Reversal
+
+## Aim
+To create a Git repository, upload it to GitHub, create a branch named `GIT-EXAM`, add a Python program, and submit a pull request to merge the branch into `main`.
+
+## Requirements
+- Git installed on your computer
+- A GitHub account
+- Internet connection
+
+**Follow these steps in order.** Commands are typed into Git Bash, not into Notepad.
+
+---
+
+## 1. Create a project folder
+
+1. Go to your **Desktop**.
+2. Right-click an empty area.
+3. Select **New → Folder**.
+4. Name the folder `DataScienceProject`.
+5. Open the folder.
+6. Right-click an empty area inside it.
+7. Select **Open Git Bash here**.
+
+A black window called Git Bash should open.
+
+## 2. Set your Git name and email
+
+If you have not configured Git before, type these commands one at a time:
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your-email@example.com"
+```
+
+Replace the sample name and email with your own name and the email connected to your GitHub account.
+
+## 3. Initialize the Git repository
+
+In Git Bash, type:
+
+```bash
+git init
+```
+
+This turns the project folder into a Git repository.
+
+## 4. Create a repository on GitHub
+
+1. Open your browser and go to **https://github.com**.
+2. Sign in.
+3. Click the **+** button near the top-right.
+4. Click **New repository**.
+5. Enter `DataScienceProject` as the repository name.
+6. Choose **Public** or **Private**.
+7. Leave **Add a README file** unchecked.
+8. Click **Create repository**.
+9. Copy the HTTPS repository address shown on the page.
+
+It will look like:
+
+`https://github.com/YOUR-GITHUB-USERNAME/DataScienceProject.git`
+
+## 5. Connect your folder to GitHub and push it
+
+Return to Git Bash. Replace the sample address below with the address you copied:
+
+```bash
+git remote add origin https://github.com/YOUR-GITHUB-USERNAME/DataScienceProject.git
+```
+
+Now type:
+
+```bash
+git branch -M main
+git commit --allow-empty -m "Initial commit"
+git push -u origin main
+```
+
+If GitHub asks you to sign in, follow the sign-in instructions.
+
+The repository is now uploaded to GitHub.
+
+---
+
+## 6. Create `program1.py` to check even or odd
+
+In Git Bash, type:
+
+```bash
+notepad program1.py
+```
+
+If Notepad asks whether to create the file, click **Yes**.
+
+Copy and paste this code into Notepad:
+
+```python
+number = int(input("Enter a number: "))
+
+if number % 2 == 0:
+    print("The number is even")
+else:
+    print("The number is odd")
+```
+
+In Notepad, click **File → Save**, then close Notepad.
+
+### Run the program
+In Git Bash, type:
+
+```bash
+python program1.py
+```
+
+If that does not work, try:
+
+```bash
+py program1.py
+```
+
+Enter a number and press **Enter**. The program will tell you whether it is even or odd.
+
+## 7. Commit and push `program1.py`
+
+In Git Bash, type:
+
+```bash
+git add program1.py
+git commit -m "Add even odd program"
+git push
+```
+
+### Check it on GitHub
+1. Open your repository on GitHub.
+2. Refresh the page.
+3. Confirm that `program1.py` is visible on the `main` branch.
+
+---
+
+## 8. Create the `GIT-EXAM` branch
+
+In Git Bash, type:
+
+```bash
+git checkout -b GIT-EXAM
+```
+
+This creates the branch and switches to it.
+
+## 9. Create `program2.py` to reverse a string
+
+The question calls the file `program2`. Since this is a Python program, create it as `program2.py`.
+
+In Git Bash, type:
+
+```bash
+notepad program2.py
+```
+
+Click **Yes** if Notepad asks to create the file.
+
+Copy and paste:
+
+```python
+text = input("Enter a string: ")
+reverse_text = text[::-1]
+
+print("Reversed string:", reverse_text)
+```
+
+Click **File → Save**, then close Notepad.
+
+### Run the program
+In Git Bash, type:
+
+```bash
+python program2.py
+```
+
+If that does not work, try:
+
+```bash
+py program2.py
+```
+
+Enter a word or sentence and press **Enter**. The program will print it in reverse order.
+
+## 10. Commit and push `GIT-EXAM`
+
+In Git Bash, type:
+
+```bash
+git add program2.py
+git commit -m "Add string reverse program"
+git push -u origin GIT-EXAM
+```
+
+### Check the branch on GitHub
+1. Open your GitHub repository.
+2. Click the branch dropdown, which may show `main`.
+3. Select `GIT-EXAM`.
+4. Confirm that `program1.py` and `program2.py` are visible.
+
+---
+
+## 11. Demonstrate the difference between `main` and `GIT-EXAM`
+
+1. On GitHub, select the `main` branch.
+2. Check the files. `program1.py` should be visible, but `program2.py` should not be there.
+3. Select the `GIT-EXAM` branch.
+4. Check the files. Both `program1.py` and `program2.py` should be visible.
+
+This demonstrates that the new file was added to `GIT-EXAM`, not directly to `main`.
+
+## 12. Create a pull request
+
+A pull request asks for changes from one branch to be reviewed and merged into another branch.
+
+1. On GitHub, open your repository.
+2. Click the **Pull requests** tab.
+3. Click **New pull request**.
+4. Set the **base** branch to `main`.
+5. Set the **compare** branch to `GIT-EXAM`.
+6. Click **Create pull request**.
+7. Enter a title, such as `Merge GIT-EXAM into main`.
+8. Click **Create pull request**.
+
+If you have permission to merge and your teacher asks you to complete the merge, click **Merge pull request**, then **Confirm merge**.
+
+## Result
+A Git repository was created and pushed to GitHub. The `program1.py` even/odd program was added to `main`. The `GIT-EXAM` branch was created, `program2.py` was added and pushed, the branch differences were checked on GitHub, and a pull request was created to merge `GIT-EXAM` into `main`.
+
+## Viva Questions and Answers
+
+**1. What is Git?**  
+Git is a version control system used to track changes in files.
+
+**2. What is GitHub?**  
+GitHub is an online platform for storing and sharing Git repositories.
+
+**3. What is a repository?**  
+A repository is a project folder whose changes are tracked by Git.
+
+**4. What is a branch?**  
+A branch is a separate line of work in a repository.
+
+**5. What is a commit?**  
+A commit saves changes in the repository’s history.
+
+**6. What does `git push` do?**  
+It uploads local commits to GitHub.
+
+**7. What is a pull request?**  
+A pull request asks for changes from one branch to be reviewed and merged into another branch.
+
+**8. What is an even number?**  
+An even number is divisible by 2 with no remainder.
+
+**9. What is an odd number?**  
+An odd number is not divisible by 2 with no remainder.
+
+**10. What is string reversal?**  
+String reversal means writing the characters of a string in the opposite order.
