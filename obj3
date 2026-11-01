@@ -1,0 +1,344 @@
+
+# Practical 3: Git Bash — Branches, Pulling, Conflicts and Pull Requests
+
+## Aim
+To create a Git repository, push it to GitHub, create two branches, pull changes between branches, demonstrate a merge conflict, and create a pull request.
+
+## Before starting
+You need:
+- Git installed on your computer
+- A GitHub account
+- An internet connection
+
+## 1. Create a project folder
+
+1. Go to your **Desktop**.
+2. Right-click an empty area.
+3. Select **New → Folder**.
+4. Name the folder `DataScienceProject`.
+5. Open the folder.
+6. Right-click an empty area inside it.
+7. Select **Open Git Bash here**.
+
+A black window called **Git Bash** should open. Type the commands below in that window, one at a time. Press **Enter** after each command.
+
+## 2. Set your Git name and email
+
+Do this only if you have not configured Git before.
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your-email@example.com"
+```
+
+Replace the sample name and email with your own name and the email connected to your GitHub account.
+
+## 3. Initialize the repository
+
+In Git Bash, type:
+
+```bash
+git init
+```
+
+This starts Git tracking in the `DataScienceProject` folder.
+
+## 4. Create a GitHub repository
+
+1. Open your browser and go to **https://github.com**.
+2. Sign in.
+3. Click the **+** button near the top-right.
+4. Click **New repository**.
+5. Enter the repository name `DataScienceProject`.
+6. Choose **Public** or **Private**.
+7. Leave **Add a README file** unchecked.
+8. Click **Create repository**.
+9. Keep the page open and copy the HTTPS repository address.
+
+It will look like this:
+
+`https://github.com/YOUR-GITHUB-USERNAME/DataScienceProject.git`
+
+## 5. Connect your folder to GitHub and push the main branch
+
+Return to Git Bash. Type the following command, replacing the sample address with the address you copied from GitHub:
+
+```bash
+git remote add origin https://github.com/YOUR-GITHUB-USERNAME/DataScienceProject.git
+```
+
+Now type these commands one at a time:
+
+```bash
+git branch -M main
+git commit --allow-empty -m "Initial commit"
+git push -u origin main
+```
+
+If GitHub asks you to sign in, follow the instructions in your browser.
+
+The `main` branch is now on GitHub. Some older repositories use the name `master`; this practical uses `main`.
+
+## 6. Create branch `GIT-EXAM-1`
+
+In Git Bash, type:
+
+```bash
+git checkout -b GIT-EXAM-1
+```
+
+This creates the branch and switches to it.
+
+## 7. Create `program1.py`
+
+Type:
+
+```bash
+notepad program1.py
+```
+
+If Notepad asks whether to create the file, click **Yes**.
+
+Copy and paste this program:
+
+```python
+for number in range(1, 11):
+    print(number, "square =", number * number)
+```
+
+In Notepad, click **File → Save**, then close Notepad.
+
+## 8. Create `program2.py`
+
+The question calls the file `program2`. Since it is a Python program, save it as `program2.py`.
+
+In Git Bash, type:
+
+```bash
+notepad program2.py
+```
+
+Click **Yes** if Notepad asks to create the file. Paste this program:
+
+```python
+text = input("Enter a word: ")
+
+if text == text[::-1]:
+    print("It is a palindrome")
+else:
+    print("It is not a palindrome")
+```
+
+Click **File → Save**, then close Notepad.
+
+## 9. Commit and push `GIT-EXAM-1`
+
+In Git Bash, type:
+
+```bash
+git add program1.py program2.py
+git commit -m "Add Python programs on GIT-EXAM-1"
+git push -u origin GIT-EXAM-1
+```
+
+### Check the branch on GitHub
+1. Open your GitHub repository in the browser.
+2. Click the branch dropdown, which may show `main`.
+3. Select `GIT-EXAM-1`.
+4. Confirm that `program1.py` and `program2.py` are visible.
+
+## 10. Create branch `GIT-EXAM-2`
+
+In Git Bash, type:
+
+```bash
+git checkout -b GIT-EXAM-2
+```
+
+This creates `GIT-EXAM-2` from your current branch, `GIT-EXAM-1`.
+
+## 11. Pull changes from `GIT-EXAM-1`
+
+Type:
+
+```bash
+git pull origin GIT-EXAM-1
+```
+
+This brings the latest changes from `GIT-EXAM-1` into the branch you are currently on, `GIT-EXAM-2`.
+
+## 12. Modify `program1.py` on `GIT-EXAM-2`
+
+Type:
+
+```bash
+notepad program1.py
+```
+
+Replace the program with this version:
+
+```python
+for number in range(1, 11):
+    print(number, "cube =", number * number * number)
+```
+
+Save the file and close Notepad.
+
+Commit and push this change:
+
+```bash
+git add program1.py
+git commit -m "Change squares to cubes on GIT-EXAM-2"
+git push -u origin GIT-EXAM-2
+```
+
+## 13. Make a different change to `program1.py` on `GIT-EXAM-1`
+
+To demonstrate a conflict, both branches must change the **same line** of the same file.
+
+First, switch back to `GIT-EXAM-1`:
+
+```bash
+git checkout GIT-EXAM-1
+```
+
+Open the file:
+
+```bash
+notepad program1.py
+```
+
+Replace the program with this version:
+
+```python
+for number in range(1, 11):
+    print(number, "double =", number * 2)
+```
+
+Save the file and close Notepad.
+
+Commit and push the change:
+
+```bash
+git add program1.py
+git commit -m "Change squares to doubles on GIT-EXAM-1"
+git push
+```
+
+Now the branches have different versions of `program1.py`:
+- `GIT-EXAM-1` prints doubles.
+- `GIT-EXAM-2` prints cubes.
+
+This difference will create a merge conflict when you try to combine them.
+
+## 14. Push and compare the branches
+
+Both branches should now be on GitHub.
+
+1. Open your repository on GitHub.
+2. Select `main` from the branch dropdown and view its files.
+3. Select `GIT-EXAM-1` and view its files.
+4. Select `GIT-EXAM-2` and view its files.
+
+The branch contents differ because each branch has its own version of `program1.py`.
+
+## 15. Create a pull request from `GIT-EXAM-2` to `GIT-EXAM-1`
+
+1. Open your repository on GitHub.
+2. Click the **Pull requests** tab.
+3. Click **New pull request**.
+4. Set the **base** branch to `GIT-EXAM-1`.
+5. Set the **compare** branch to `GIT-EXAM-2`.
+6. Click **Create pull request**.
+7. Enter a title, such as `Merge GIT-EXAM-2 into GIT-EXAM-1`.
+8. Click **Create pull request**.
+
+GitHub may show that the branches cannot be merged automatically because `program1.py` was changed differently in both branches.
+
+## 16. Resolve the merge conflict
+
+Return to Git Bash and switch to `GIT-EXAM-2`:
+
+```bash
+git checkout GIT-EXAM-2
+```
+
+Bring in the latest `GIT-EXAM-1` changes:
+
+```bash
+git pull origin GIT-EXAM-1
+```
+
+Git may report a conflict in `program1.py`.
+
+1. Open the file:
+
+   ```bash
+   notepad program1.py
+   ```
+
+2. You may see conflict markers like these:
+
+   ```text
+   <<<<<<< HEAD
+   for number in range(1, 11):
+       print(number, "cube =", number * number * number)
+   =======
+   for number in range(1, 11):
+       print(number, "double =", number * 2)
+   >>>>>>> GIT-EXAM-1
+   ```
+
+3. Delete the conflict-marker lines and choose the final program you want to keep. For example, use:
+
+   ```python
+   for number in range(1, 11):
+       print(number, "square =", number * number)
+   ```
+
+4. Save the file and close Notepad.
+
+Now type:
+
+```bash
+git add program1.py
+git commit -m "Resolve merge conflict in program1.py"
+git push
+```
+
+Refresh the pull request on GitHub. It should now show that the conflict has been resolved. The pull request is ready for review and can be merged by someone with permission.
+
+## Result
+A Git repository was created and pushed to GitHub. The `GIT-EXAM-1` and `GIT-EXAM-2` branches were created, changes were committed and pushed, and a pull request was submitted from `GIT-EXAM-2` to `GIT-EXAM-1`. A merge conflict was demonstrated and resolved.
+
+## Viva Questions and Answers
+
+**1. What is Git?**  
+Git is a version control system used to track changes in files.
+
+**2. What is GitHub?**  
+GitHub is an online platform for storing and sharing Git repositories.
+
+**3. What is a branch?**  
+A branch is a separate line of work in a repository.
+
+**4. What does `git checkout -b` do?**  
+It creates a new branch and switches to it.
+
+**5. What does `git pull` do?**  
+It downloads changes from a remote repository and combines them with the current branch.
+
+**6. What does `git push` do?**  
+It uploads local commits to GitHub.
+
+**7. What is a pull request?**  
+A pull request asks for changes from one branch to be reviewed and merged into another branch.
+
+**8. What is a merge conflict?**  
+A merge conflict happens when Git cannot automatically combine different changes to the same part of a file.
+
+**9. Why did the conflict occur in this practical?**  
+Both branches changed the same file, `program1.py`, in different ways.
+
+**10. How was the conflict resolved?**  
+We opened the conflicting file, chose the final content, removed the conflict markers, committed the resolution, and pushed it to GitHub.
