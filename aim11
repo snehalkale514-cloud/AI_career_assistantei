@@ -1,0 +1,733 @@
+# PRACTICAL 11: SET UP A LOCAL KUBERNETES CLUSTER USING MINIKUBE TO DEPLOY AND SCALE A DOCKERIZED AI APPLICATION
+
+## 1. AIM
+
+To set up a local Kubernetes cluster using Minikube, deploy a Dockerized application, and scale the application by increasing the number of replicas.
+
+## 2. REQUIREMENTS
+
+1. Windows computer
+2. Docker Desktop
+3. Minikube
+4. kubectl
+5. Visual Studio Code
+6. Python
+7. Internet connection for downloading the required software and images
+
+## 3. THEORY
+
+**Docker:** Docker packages an application and its required files into an image. A container is created from that image.
+
+**Kubernetes:** Kubernetes is a tool used to deploy, manage, and scale containerized applications.
+
+**Minikube:** Minikube creates a small Kubernetes cluster on a local computer for learning and testing.
+
+**kubectl:** kubectl is a command-line tool used to communicate with Kubernetes.
+
+**Pod:** A pod is the smallest unit Kubernetes manages. It contains one or more containers.
+
+**Deployment:** A Deployment manages application pods and helps maintain the requested number of replicas.
+
+**Scaling:** Scaling means increasing or decreasing the number of application replicas.
+
+## 4. UNDERSTANDING THE PRACTICAL
+
+In this practical, we will create a simple web application that displays the message:
+
+AI Model Application is Running!
+
+We will package the application using Docker, deploy it on Kubernetes using Minikube, and scale it from one replica to three replicas. Finally, we will scale it back to one replica.
+
+The application is only a demonstration. It does not train or run an actual AI model.
+
+# 5. PROCEDURE
+
+## STEP 1: INSTALL AND START DOCKER DESKTOP
+
+1. Click the Windows Start menu.
+2. Search for Docker Desktop.
+3. If Docker Desktop is installed, open it.
+4. Wait until Docker Desktop finishes starting.
+5. Keep Docker Desktop running.
+
+If Docker Desktop is not installed, open the official installation guide:
+
+https://docs.docker.com/desktop/setup/install/windows-install/
+
+Download and install Docker Desktop by following the instructions.
+
+If Docker asks you to enable WSL 2 or restart the computer, follow the instructions displayed.
+
+## STEP 2: OPEN VISUAL STUDIO CODE
+
+1. Open Visual Studio Code.
+2. Click File at the top.
+3. Select Open Folder.
+4. Go to the Desktop.
+5. Create a new folder named ai-model-app if it does not already exist.
+6. Select the ai-model-app folder.
+7. Click Select Folder.
+8. Click Terminal at the top.
+9. Select New Terminal.
+
+A terminal will appear at the bottom of VS Code. We will use it to enter commands.
+
+## STEP 3: CHECK DOCKER
+
+In the VS Code terminal, enter the following command:
+
+```powershell
+docker --version
+```
+
+Press Enter.
+
+If Docker is installed, a version number will appear.
+
+Now enter:
+
+```powershell
+docker info
+```
+
+Press Enter.
+
+Docker should display information about its client and server.
+
+If the command fails, check that Docker Desktop is running before continuing.
+
+## STEP 4: INSTALL AND CHECK MINIKUBE
+
+Minikube creates the local Kubernetes cluster.
+
+To check whether Minikube is installed, enter:
+
+```powershell
+minikube version
+```
+
+Press Enter.
+
+If the command is not recognized, install Minikube using the official instructions:
+
+https://minikube.sigs.k8s.io/docs/start/
+
+Follow the Windows installation instructions.
+
+After installation, reopen the VS Code terminal and run:
+
+```powershell
+minikube version
+```
+
+A version number should appear.
+
+## STEP 5: INSTALL AND CHECK KUBECTL
+
+kubectl is used to give commands to Kubernetes.
+
+Enter:
+
+```powershell
+kubectl version --client
+```
+
+Press Enter.
+
+If the command is not recognized, install kubectl using the official instructions:
+
+https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/
+
+After installation, reopen the terminal and run:
+
+```powershell
+kubectl version --client
+```
+
+A client version should appear.
+
+Before continuing, make sure Docker, Minikube, and kubectl are installed and working.
+
+## STEP 6: CREATE THE PROJECT FILES
+
+In VS Code, use the Explorer panel on the left to create the following files inside the ai-model-app folder:
+
+```text
+ai-model-app/
+├── app.py
+├── requirements.txt
+├── Dockerfile
+└── deployment.yaml
+```
+
+We will create and save each file separately.
+
+### 6.1 Create app.py
+
+1. In the Explorer panel, move your mouse over the ai-model-app folder.
+2. Click the New File icon.
+3. Enter the filename app.py.
+4. Press Enter.
+5. Paste the following code into the file.
+
+```python
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "AI Model Application is Running!"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+```
+
+6. Press Ctrl + S to save the file.
+
+Explanation:
+
+- Flask is used to create the web application.
+- The home route displays the application message.
+- The application runs on port 5000.
+
+### 6.2 Create requirements.txt
+
+1. Click the New File icon in the Explorer.
+2. Enter requirements.txt.
+3. Press Enter.
+4. Paste the following content.
+
+```text
+Flask
+```
+
+5. Press Ctrl + S.
+
+Explanation:
+
+This file specifies Flask as the Python library required by the application.
+
+### 6.3 Create Dockerfile
+
+1. Click the New File icon.
+2. Enter Dockerfile as the filename.
+3. Do not add .txt or .py to the filename.
+4. Press Enter.
+5. Paste the following code.
+
+```dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
+```
+
+6. Press Ctrl + S.
+
+Explanation:
+
+The Dockerfile contains instructions for building an image that can run the Flask application.
+
+### 6.4 Create deployment.yaml
+
+1. Click the New File icon.
+2. Enter deployment.yaml.
+3. Press Enter.
+4. Paste the following code.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-model-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-model-app
+  template:
+    metadata:
+      labels:
+        app: ai-model-app
+    spec:
+      containers:
+        - name: ai-model-app
+          image: ai-model-app:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+```
+
+5. Press Ctrl + S.
+
+Explanation:
+
+This file tells Kubernetes how to deploy the application. Initially, it requests one replica.
+
+IMPORTANT: YAML uses spaces for indentation. Copy the code exactly as shown.
+
+## STEP 7: CHECK THE PROJECT FOLDER
+
+Check that the Explorer panel displays all four files:
+
+- app.py
+- requirements.txt
+- Dockerfile
+- deployment.yaml
+
+Make sure all files are saved.
+
+## STEP 8: OPEN THE PROJECT FOLDER IN THE TERMINAL
+
+In the VS Code terminal, enter:
+
+```powershell
+cd "$HOME\Desktop\ai-model-app"
+```
+
+Press Enter.
+
+This command moves the terminal into the project folder.
+
+If the folder cannot be found, locate the folder in File Explorer, copy its actual path, and use that path with the cd command.
+
+For example:
+
+```powershell
+cd "C:\Users\YourUsername\Desktop\ai-model-app"
+```
+
+Replace the example path with your actual folder path.
+
+## STEP 9: BUILD THE DOCKER IMAGE
+
+Enter the following command:
+
+```powershell
+docker build -t ai-model-app:latest .
+```
+
+Press Enter.
+
+Wait for Docker to complete the build. The first build may take several minutes.
+
+Explanation:
+
+- docker build creates the image.
+- ai-model-app is the image name.
+- latest is the image tag.
+- The dot tells Docker to use the current folder.
+
+After the build finishes, enter:
+
+```powershell
+docker images
+```
+
+Press Enter.
+
+The list should contain an image named ai-model-app with the tag latest.
+
+## STEP 10: START THE MINIKUBE CLUSTER
+
+Make sure Docker Desktop is running.
+
+In the terminal, enter:
+
+```powershell
+minikube start --driver=docker
+```
+
+Press Enter.
+
+Wait for Minikube to finish starting.
+
+Explanation:
+
+This command creates a local Kubernetes cluster using Docker.
+
+Check the cluster by entering:
+
+```powershell
+kubectl get nodes
+```
+
+Press Enter.
+
+The output should contain a node named minikube with the status Ready.
+
+If the node is not ready, wait briefly and check again.
+
+## STEP 11: LOAD THE DOCKER IMAGE INTO MINIKUBE
+
+Enter:
+
+```powershell
+minikube image load ai-model-app:latest
+```
+
+Press Enter.
+
+Wait for the command to finish.
+
+Explanation:
+
+This command makes the locally built Docker image available inside Minikube so Kubernetes can use it.
+
+## STEP 12: DEPLOY THE APPLICATION
+
+Make sure the terminal is inside the ai-model-app folder.
+
+Enter:
+
+```powershell
+kubectl apply -f deployment.yaml
+```
+
+Press Enter.
+
+A message similar to the following should appear:
+
+```text
+deployment.apps/ai-model-app created
+```
+
+This means Kubernetes accepted the Deployment instructions.
+
+Check the Deployment:
+
+```powershell
+kubectl get deployments
+```
+
+Press Enter.
+
+The output should eventually show one ready replica.
+
+Check the pods:
+
+```powershell
+kubectl get pods
+```
+
+Press Enter.
+
+Wait until the application pod shows the status Running and its container is ready.
+
+## STEP 13: OPEN THE APPLICATION IN A BROWSER
+
+Enter the following command:
+
+```powershell
+kubectl port-forward deployment/ai-model-app 5000:5000
+```
+
+Press Enter.
+
+Keep this terminal open.
+
+The terminal should display a message indicating that port 5000 is being forwarded.
+
+Now:
+
+1. Open Google Chrome.
+2. Click the address bar.
+3. Enter http://localhost:5000
+4. Press Enter.
+
+The browser should display:
+
+AI Model Application is Running!
+
+This confirms that the application can be accessed through the local port-forward connection.
+
+## STEP 14: SCALE THE APPLICATION TO THREE REPLICAS
+
+Keep the terminal running port-forwarding open.
+
+Open a second terminal in VS Code:
+
+1. Click Terminal at the top.
+2. Select New Terminal.
+3. Use the new terminal to enter the scaling command.
+
+Enter:
+
+```powershell
+kubectl scale deployment ai-model-app --replicas=3
+```
+
+Press Enter.
+
+A message similar to the following should appear:
+
+```text
+deployment.apps/ai-model-app scaled
+```
+
+Explanation:
+
+This command tells Kubernetes to maintain three replicas of the application.
+
+Check the Deployment:
+
+```powershell
+kubectl get deployments
+```
+
+Press Enter.
+
+When all three replicas are ready, the output should show:
+
+```text
+NAME           READY   UP-TO-DATE   AVAILABLE
+ai-model-app   3/3     3            3
+```
+
+Check the pods:
+
+```powershell
+kubectl get pods
+```
+
+Press Enter.
+
+Three application pods should eventually appear with their containers ready.
+
+The pod names may differ from one computer to another.
+
+## STEP 15: SCALE THE APPLICATION BACK TO ONE REPLICA
+
+In the second terminal, enter:
+
+```powershell
+kubectl scale deployment ai-model-app --replicas=1
+```
+
+Press Enter.
+
+Check the Deployment:
+
+```powershell
+kubectl get deployments
+```
+
+Press Enter.
+
+After scaling finishes, the output should show one ready replica.
+
+Check the pods:
+
+```powershell
+kubectl get pods
+```
+
+Press Enter.
+
+Only one application pod should remain after Kubernetes finishes scaling down.
+
+## STEP 16: STOP THE APPLICATION AND CLUSTER
+
+After completing the practical, stop the port-forward command.
+
+1. Return to the first terminal.
+2. Click inside it.
+3. Press Ctrl + C.
+
+Now delete the Deployment by entering:
+
+```powershell
+kubectl delete -f deployment.yaml
+```
+
+Press Enter.
+
+To stop Minikube, enter:
+
+```powershell
+minikube stop
+```
+
+Press Enter.
+
+The cluster is now stopped. The Docker image remains on your computer unless you delete it separately.
+
+# 6. SAMPLE OUTPUT
+
+### After Starting Minikube
+
+```text
+NAME       STATUS   ROLES           AGE   VERSION
+minikube   Ready    control-plane   ...   ...
+```
+
+### After Deploying the Application
+
+```text
+NAME           READY   UP-TO-DATE   AVAILABLE
+ai-model-app   1/1     1            1
+```
+
+### After Scaling to Three Replicas
+
+```text
+NAME           READY   UP-TO-DATE   AVAILABLE
+ai-model-app   3/3     3            3
+```
+
+The exact pod names, version numbers, and timing may differ.
+
+# 7. IMPORTANT COMMANDS AND THEIR PURPOSES
+
+| Command | Purpose |
+|---|---|
+| docker --version | Checks the Docker version. |
+| minikube version | Checks the Minikube version. |
+| kubectl version --client | Checks the kubectl client version. |
+| docker build -t ai-model-app:latest . | Builds the Docker image. |
+| minikube start --driver=docker | Starts the local Kubernetes cluster. |
+| kubectl get nodes | Displays Kubernetes nodes. |
+| minikube image load ai-model-app:latest | Loads the local Docker image into Minikube. |
+| kubectl apply -f deployment.yaml | Creates or updates the Deployment. |
+| kubectl get deployments | Displays Deployment status. |
+| kubectl get pods | Displays application pods. |
+| kubectl scale deployment ai-model-app --replicas=3 | Scales the application to three replicas. |
+| kubectl scale deployment ai-model-app --replicas=1 | Scales the application back to one replica. |
+| kubectl port-forward deployment/ai-model-app 5000:5000 | Forwards a local port to the application. |
+| kubectl delete -f deployment.yaml | Deletes the Deployment. |
+| minikube stop | Stops the Minikube cluster. |
+
+# 8. COMMON ERRORS AND SOLUTIONS
+
+**Error 1: Docker is not recognized**
+
+Check whether Docker Desktop is installed. If it is installed, reopen the terminal and check again.
+
+**Error 2: Docker cannot connect**
+
+Open Docker Desktop and wait until it is running.
+
+**Error 3: Minikube is not recognized**
+
+Install Minikube and reopen the terminal.
+
+**Error 4: kubectl is not recognized**
+
+Install kubectl and reopen the terminal.
+
+**Error 5: The project folder cannot be found**
+
+Check the actual folder location and use the correct path in the cd command.
+
+**Error 6: The pod shows ImagePullBackOff**
+
+Check the image name in deployment.yaml and run:
+
+```powershell
+minikube image load ai-model-app:latest
+```
+
+**Error 7: The pod shows CrashLoopBackOff**
+
+Check the application logs:
+
+```powershell
+kubectl logs deployment/ai-model-app
+```
+
+Read the error message to identify the problem.
+
+**Error 8: The browser cannot open the application**
+
+Make sure the pod is ready and the port-forward command is still running.
+
+**Error 9: Three pods do not appear immediately**
+
+Wait briefly and run:
+
+```powershell
+kubectl get pods
+```
+
+Kubernetes may need time to create and start the additional pods.
+
+# 9. VIVA QUESTIONS AND ANSWERS
+
+**Q1. What is Docker?**
+
+Docker packages applications and their required files into images.
+
+**Q2. What is a Docker image?**
+
+A Docker image is a package used to create containers.
+
+**Q3. What is a container?**
+
+A container is an isolated environment in which an application runs.
+
+**Q4. What is Kubernetes?**
+
+Kubernetes is a system used to manage containerized applications.
+
+**Q5. What is Minikube?**
+
+Minikube runs a small Kubernetes cluster on a local computer.
+
+**Q6. What is kubectl?**
+
+kubectl is a command-line tool used to communicate with Kubernetes.
+
+**Q7. What is a pod?**
+
+A pod is the smallest unit Kubernetes manages. It contains one or more containers.
+
+**Q8. What is a Deployment?**
+
+A Deployment manages application pods and helps maintain the requested number of replicas.
+
+**Q9. What is scaling?**
+
+Scaling means increasing or decreasing the number of application replicas.
+
+**Q10. What does replicas: 3 mean?**
+
+It tells Kubernetes to maintain three copies of the application.
+
+**Q11. What does kubectl get pods do?**
+
+It displays the pods and their status.
+
+**Q12. What does kubectl apply -f deployment.yaml do?**
+
+It creates or updates Kubernetes resources using the YAML file.
+
+**Q13. Why do we use minikube image load?**
+
+It makes the locally built Docker image available inside Minikube.
+
+**Q14. Why do we use port-forwarding?**
+
+It allows us to access the application through a local port.
+
+**Q15. What is the purpose of a Dockerfile?**
+
+A Dockerfile contains instructions for building a Docker image.
+
+**Q16. Is this a real AI model?**
+
+No. This application is a demonstration used to learn Docker, Kubernetes, deployment, and scaling.
+
+# 10. RESULT
+
+A local Kubernetes cluster was created using Minikube. The Dockerized application was deployed successfully, accessed through a web browser, and scaled from one replica to three replicas. The application was then scaled back to one replica.
+
+The practical demonstrates how Docker and Kubernetes can be used to deploy and scale an application on a local computer.
