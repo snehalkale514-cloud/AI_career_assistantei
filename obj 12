@@ -1,0 +1,573 @@
+# Practical: Automating Deployment of an Application Using GitHub, Docker, Jenkins, and Kubernetes
+
+## Aim
+To automate the process of retrieving application code from GitHub, building a Docker image, pushing it to Docker Hub, and deploying the application on Kubernetes using Jenkins.
+
+## Tools Required
+- Windows computer
+- Visual Studio Code
+- Git and GitHub account
+- Docker Desktop and Docker Hub account
+- Minikube and `kubectl`
+- Jenkins
+
+## Project Folder and Files
+
+Create a folder named `ai-model-app` on your Desktop.
+
+Open that folder in VS Code and create these five files directly inside it:
+
+```text
+Desktop
+└── ai-model-app
+    ├── app.py
+    ├── requirements.txt
+    ├── Dockerfile
+    ├── deployment.yaml
+    └── Jenkinsfile
+```
+
+## Step 1: Create the application files
+
+### 1.1 Create `app.py`
+
+Open `app.py` and paste:
+
+```python
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "AI Model Application is Running!"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+```
+
+### 1.2 Create `requirements.txt`
+
+Paste:
+
+```text
+Flask
+```
+
+### 1.3 Create `Dockerfile`
+
+Paste:
+
+```dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
+```
+
+### 1.4 Create `deployment.yaml`
+
+Paste the following. Replace `YOUR_DOCKERHUB_USERNAME` with your Docker Hub username before deploying.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-model-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-model-app
+  template:
+    metadata:
+      labels:
+        app: ai-model-app
+    spec:
+      containers:
+        - name: ai-model-app
+          image: YOUR_DOCKERHUB_USERNAME/ai-model-app:latest
+          ports:
+            - containerPort: 5000
+```
+
+### 1.5 Create `Jenkinsfile`
+
+The Jenkinsfile will be completed in Step 10 after Jenkins credentials are configured.
+
+## Step 2: Create a GitHub repository
+
+1. Open [GitHub](https://github.com) and sign in.
+2. Click **+ → New repository**.
+3. Enter the repository name: `ai-model-app`.
+4. Choose **Public**.
+5. Leave **Add a README file** unchecked.
+6. Click **Create repository**.
+
+## Step 3: Upload the project to GitHub
+
+1. Open the `ai-model-app` folder in VS Code.
+2. Click **Terminal → New Terminal**.
+3. Check whether Git is installed:
+
+```powershell
+git --version
+```
+
+If Git is not recognized, install Git before continuing.
+
+4. Run these commands one at a time:
+
+```powershell
+git init
+```
+
+```powershell
+git add .
+```
+
+```powershell
+git commit -m "Add AI model application"
+```
+
+5. Copy the repository URL from GitHub. It will look like this:
+
+```text
+https://github.com/YOUR-USERNAME/ai-model-app.git
+```
+
+6. Connect the local folder to GitHub. Replace the example URL with your actual URL:
+
+```powershell
+git remote add origin https://github.com/YOUR-USERNAME/ai-model-app.git
+```
+
+7. Run:
+
+```powershell
+git branch -M main
+```
+
+```powershell
+git push -u origin main
+```
+
+8. Refresh the GitHub page and confirm that all five files appear.
+
+## Step 4: Check Docker
+
+1. Open Docker Desktop from the Windows Start menu.
+2. Wait until Docker Desktop is running.
+3. In the VS Code terminal, run:
+
+```powershell
+docker --version
+```
+
+Then:
+
+```powershell
+docker info
+```
+
+If either command fails, resolve the Docker installation or startup issue before continuing.
+
+## Step 5: Build the Docker image
+
+In the VS Code terminal, move to the project folder:
+
+```powershell
+cd "$HOME\Desktop\ai-model-app"
+```
+
+Build the image:
+
+```powershell
+docker build -t ai-model-app .
+```
+
+Check that the image was created:
+
+```powershell
+docker images
+```
+
+The image list should contain `ai-model-app`.
+
+## Step 6: Run the Docker container
+
+Start the container:
+
+```powershell
+docker run -d --name ai-model-container -p 5000:5000 ai-model-app
+```
+
+Check that it is running:
+
+```powershell
+docker ps
+```
+
+Open the browser and visit:
+
+`http://localhost:5000`
+
+The page should display:
+
+**AI Model Application is Running!**
+
+If the page does not open, check the container logs:
+
+```powershell
+docker logs ai-model-container
+```
+
+## Step 7: Push the image to Docker Hub
+
+1. Open [Docker Hub](https://hub.docker.com) and sign in or create an account.
+2. Note your Docker Hub username.
+3. Log in from the VS Code terminal:
+
+```powershell
+docker login
+```
+
+4. Tag the image. Replace `YOUR_DOCKERHUB_USERNAME` with your username:
+
+```powershell
+docker tag ai-model-app YOUR_DOCKERHUB_USERNAME/ai-model-app:latest
+```
+
+5. Push the image:
+
+```powershell
+docker push YOUR_DOCKERHUB_USERNAME/ai-model-app:latest
+```
+
+6. Open Docker Hub → **Repositories** and confirm that `ai-model-app` appears.
+
+Do not share your Docker Hub password or access token.
+
+## Step 8: Check Minikube and kubectl
+
+In the VS Code terminal, run:
+
+```powershell
+minikube version
+```
+
+```powershell
+kubectl version --client
+```
+
+If either command is not recognized, install that tool before continuing.
+
+## Step 9: Start Minikube and check Kubernetes
+
+Make sure Docker Desktop is running, then start Minikube:
+
+```powershell
+minikube start --driver=docker
+```
+
+Check the Kubernetes node:
+
+```powershell
+kubectl get nodes
+```
+
+The Minikube node should show status `Ready`.
+
+## Step 10: Update the Kubernetes deployment file
+
+1. Open `deployment.yaml` in VS Code.
+2. Replace the image placeholder with your actual Docker Hub username:
+
+```yaml
+image: YOUR_DOCKERHUB_USERNAME/ai-model-app:latest
+```
+
+3. Save the file.
+4. Apply the deployment:
+
+```powershell
+kubectl apply -f deployment.yaml
+```
+
+5. Check the deployment and pod:
+
+```powershell
+kubectl get deployments
+```
+
+```powershell
+kubectl get pods
+```
+
+Wait until the pod status becomes `Running`.
+
+If the pod shows `ImagePullBackOff` or `ErrImagePull`, check that the image name and Docker Hub username are correct.
+
+## Step 11: Open the application through Kubernetes
+
+Run:
+
+```powershell
+kubectl port-forward deployment/ai-model-app 5000:5000
+```
+
+Keep the terminal open and visit:
+
+`http://localhost:5000`
+
+The page should display:
+
+**AI Model Application is Running!**
+
+## Step 12: Open Jenkins
+
+1. Open your browser.
+2. Visit:
+
+`http://localhost:8080`
+
+If Jenkins does not open, it may not be installed or running yet. Start or install Jenkins before continuing.
+
+## Step 13: Create a Jenkins pipeline job
+
+1. In Jenkins, click **New Item**.
+2. Enter the name: `ai-model-pipeline`.
+3. Select **Pipeline**.
+4. Click **OK**.
+5. Scroll to the **Pipeline** section.
+6. Set **Definition** to **Pipeline script from SCM**.
+7. Set **SCM** to **Git**.
+8. Enter your GitHub repository URL.
+9. Set **Branch Specifier** to:
+
+```text
+*/main
+```
+
+10. Set **Script Path** to:
+
+```text
+Jenkinsfile
+```
+
+11. Click **Save**.
+
+Do not run the pipeline yet. Configure its credentials and access first.
+
+## Step 14: Add Docker Hub credentials in Jenkins
+
+1. In Jenkins, open **Manage Jenkins → Credentials**.
+2. Open **System → Global credentials (unrestricted)**.
+3. Click **Add Credentials**.
+4. Fill in:
+   - **Kind:** Username with password
+   - **Username:** Your Docker Hub username
+   - **Password:** Your Docker Hub password or access token
+   - **ID:** `dockerhub-creds`
+   - **Description:** `Docker Hub login`
+5. Click **Create**.
+
+Keep your password or access token private. Do not place it directly in the Jenkinsfile.
+
+## Step 15: Update the Jenkinsfile
+
+Open `Jenkinsfile` in VS Code and replace its contents with the following. Replace `YOUR_DOCKERHUB_USERNAME` with your actual Docker Hub username.
+
+```groovy
+pipeline {
+    agent any
+
+    environment {
+        DOCKERHUB_USERNAME = 'YOUR_DOCKERHUB_USERNAME'
+        IMAGE_NAME = 'ai-model-app'
+    }
+
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                bat 'docker build -t %DOCKERHUB_USERNAME%/%IMAGE_NAME%:latest .'
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASSWORD'
+                )]) {
+                    bat 'docker login -u %DOCKER_USER% -p %DOCKER_PASSWORD%'
+                    bat 'docker push %DOCKERHUB_USERNAME%/%IMAGE_NAME%:latest'
+                    bat 'docker logout'
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                bat 'kubectl apply -f deployment.yaml'
+            }
+        }
+    }
+}
+```
+
+Save the file with **Ctrl + S**.
+
+**Note:** This example uses Windows `bat` commands. The Jenkins agent must be able to run Docker and `kubectl`. The Docker Hub credential ID in Jenkins must match `dockerhub-creds`.
+
+## Step 16: Upload the updated Jenkinsfile to GitHub
+
+In the VS Code terminal, run:
+
+```powershell
+git add Jenkinsfile
+```
+
+```powershell
+git commit -m "Update Jenkins pipeline"
+```
+
+```powershell
+git push
+```
+
+## Step 17: Confirm the Docker image name
+
+Make sure the Docker Hub username in `Jenkinsfile` and `deployment.yaml` is the same.
+
+The image name should follow this format:
+
+```text
+YOUR_DOCKERHUB_USERNAME/ai-model-app:latest
+```
+
+If you change `deployment.yaml`, upload it to GitHub:
+
+```powershell
+git add deployment.yaml
+```
+
+```powershell
+git commit -m "Set Docker image in Kubernetes deployment"
+```
+
+```powershell
+git push
+```
+
+## Step 18: Check Docker and Kubernetes access from Jenkins
+
+Jenkins runs pipeline commands on its configured agent. That agent must be able to use Docker and Kubernetes.
+
+On the machine/account running the Jenkins agent, check:
+
+```powershell
+docker --version
+```
+
+```powershell
+kubectl get nodes
+```
+
+Docker should respond with its version, and Kubernetes should show the Minikube node as `Ready`.
+
+If Jenkins runs on a separate machine or agent, Docker and Kubernetes access must be configured on that agent. Commands working in your own VS Code terminal do not automatically mean they will work in Jenkins.
+
+## Step 19: Check the Jenkins job configuration
+
+1. Open Jenkins.
+2. Select `ai-model-pipeline`.
+3. Click **Configure**.
+4. Under **Pipeline**, confirm:
+   - **Definition:** Pipeline script from SCM
+   - **SCM:** Git
+   - **Repository URL:** Your GitHub repository URL
+   - **Branch Specifier:** `*/main`
+   - **Script Path:** `Jenkinsfile`
+5. Click **Save**.
+
+## Step 20: Run the Jenkins pipeline
+
+1. Open the `ai-model-pipeline` job.
+2. Click **Build Now**.
+3. Click the new build number under **Build History**.
+4. Click **Console Output**.
+5. Watch the pipeline stages.
+
+The pipeline should:
+1. Build the Docker image.
+2. Log in to Docker Hub using the Jenkins credential.
+3. Push the image to Docker Hub.
+4. Apply `deployment.yaml` to Kubernetes.
+
+A successful build should display:
+
+```text
+Finished: SUCCESS
+```
+
+## Step 21: Verify the Kubernetes deployment
+
+Run:
+
+```powershell
+kubectl get deployments
+```
+
+```powershell
+kubectl get pods
+```
+
+The application pod should eventually show status `Running`.
+
+If it does not, inspect the pod:
+
+```powershell
+kubectl describe pods
+```
+
+## Step 22: Open the deployed application
+
+Run:
+
+```powershell
+kubectl port-forward deployment/ai-model-app 5000:5000
+```
+
+Keep the terminal open and visit:
+
+`http://localhost:5000`
+
+The application should display:
+
+**AI Model Application is Running!**
+
+## Result
+The application code was stored in GitHub, packaged into a Docker image, pushed to Docker Hub, and deployed to Kubernetes through a Jenkins pipeline.
+
+## What to Show During the Practical
+- The project files in GitHub.
+- The Docker image in Docker Hub.
+- Jenkins pipeline stages with `Finished: SUCCESS`.
+- Kubernetes pod status showing `Running`.
+- The application opened at `http://localhost:5000`.
+
+## Important Notes
+- The sample Flask app is a deployment demonstration; it does not train or run an actual AI model.
+- Jenkins must be able to run Docker and `kubectl` and access the Minikube cluster.
+- The Jenkinsfile shown is a learning example and may need adjustments for the specific Jenkins agent and environment.
+- Never put passwords or access tokens directly in the Jenkinsfile or share them in screenshots.
