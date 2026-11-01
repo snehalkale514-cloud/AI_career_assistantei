@@ -1,0 +1,413 @@
+# PRACTICAL NO. 10 — DOCKER COMPOSE
+
+## Aim
+To run a web application using three separate containers: frontend, AI service, and database with the help of Docker Compose.
+
+## Introduction
+Docker Compose is a tool used to run multiple containers together using a single configuration file. In this practical, we create a simple web application with three services: frontend, AI service, and database.
+
+**Note:** This is a demonstration application for learning Docker Compose. It does not contain a trained AI model.
+
+## STEP 1: Check Docker Desktop
+
+1. Open Docker Desktop from the Windows Start menu.
+2. Wait until Docker Desktop shows that Docker is running.
+3. Open Visual Studio Code (VS Code).
+4. If Docker Desktop is not installed, install it before continuing.
+
+## STEP 2: Create the Project Folder
+
+1. Go to the Desktop.
+2. Right-click an empty space.
+3. Select New → Folder.
+4. Name the folder `ai-compose-app`.
+5. Open VS Code.
+6. Click File → Open Folder.
+7. Select the `ai-compose-app` folder on the Desktop.
+8. Click Select Folder.
+
+## STEP 3: Create the Folders and Files
+
+Create two folders inside `ai-compose-app`:
+
+- `frontend`
+- `ai`
+
+Inside the `frontend` folder, create these files:
+
+- `index.html`
+- `Dockerfile`
+
+Inside the `ai` folder, create these files:
+
+- `app.py`
+- `requirements.txt`
+- `Dockerfile`
+
+Inside the main `ai-compose-app` folder, create this file:
+
+- `docker-compose.yml`
+
+The folder structure should look like this:
+
+    ai-compose-app/
+    |
+    |-- docker-compose.yml
+    |
+    |-- frontend/
+    |   |-- index.html
+    |   |-- Dockerfile
+    |
+    |-- ai/
+        |-- app.py
+        |-- requirements.txt
+        |-- Dockerfile
+
+**Important:** Both files named `Dockerfile` must have no `.txt` extension.
+
+## STEP 4: Create the AI Service Code
+
+1. Open `app.py` inside the `ai` folder.
+2. Copy and paste the following code.
+3. Press Ctrl + S to save the file.
+
+### Code for app.py
+
+    from flask import Flask, jsonify
+
+    app = Flask(__name__)
+
+    @app.route("/")
+    def home():
+        return jsonify({"message": "AI model service is running"})
+
+    @app.route("/predict")
+    def predict():
+        return jsonify({"prediction": "This is a demo prediction"})
+
+    if __name__ == "__main__":
+        app.run(host="0.0.0.0", port=5000)
+
+**Explanation:**
+
+This code creates a simple web service using Flask. It returns a message when accessed and provides a demo prediction when the `/predict` route is requested.
+
+## STEP 5: Add the Required Python Library
+
+1. Open `requirements.txt` inside the `ai` folder.
+2. Enter the following line:
+
+    Flask
+
+3. Press Ctrl + S to save the file.
+
+**Explanation:**
+
+Flask is a Python library used to develop web applications. This file tells Docker which library must be installed.
+
+## STEP 6: Create the AI Dockerfile
+
+1. Open the `Dockerfile` inside the `ai` folder.
+2. Copy and paste the following code.
+3. Press Ctrl + S to save the file.
+
+### Code for AI Dockerfile
+
+    FROM python:3.11-slim
+
+    WORKDIR /app
+
+    COPY requirements.txt .
+    RUN pip install --no-cache-dir -r requirements.txt
+
+    COPY app.py .
+
+    EXPOSE 5000
+
+    CMD ["python", "app.py"]
+
+**Explanation:**
+
+- `FROM` selects the Python environment.
+- `WORKDIR` sets the working directory inside the container.
+- `COPY` copies files into the container.
+- `RUN` installs the required Python libraries.
+- `EXPOSE` documents the port used by the application.
+- `CMD` starts the application.
+
+## STEP 7: Create the Frontend Webpage
+
+1. Open `index.html` inside the `frontend` folder.
+2. Copy and paste the following code.
+3. Press Ctrl + S to save the file.
+
+### Code for index.html
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>AI Application</title>
+    </head>
+    <body>
+        <h1>Web-Based AI Application</h1>
+
+        <button onclick="getPrediction()">Get Prediction</button>
+
+        <p id="result"></p>
+
+        <script>
+            async function getPrediction() {
+                try {
+                    const response = await fetch("http://localhost:5000/predict");
+                    const data = await response.json();
+
+                    document.getElementById("result").innerText = data.prediction;
+                } catch (error) {
+                    document.getElementById("result").innerText =
+                        "Unable to get prediction. Please check the AI service.";
+                }
+            }
+        </script>
+    </body>
+    </html>
+
+**Explanation:**
+
+This HTML file creates a webpage with a heading and a Get Prediction button. When the user clicks the button, the webpage requests a prediction from the AI service and displays the result.
+
+## STEP 8: Create the Frontend Dockerfile
+
+1. Open the `Dockerfile` inside the `frontend` folder.
+2. Copy and paste the following code.
+3. Press Ctrl + S to save the file.
+
+### Code for Frontend Dockerfile
+
+    FROM nginx:alpine
+
+    COPY index.html /usr/share/nginx/html/index.html
+
+    EXPOSE 80
+
+**Explanation:**
+
+- `FROM nginx:alpine` selects a lightweight Nginx web server image.
+- `COPY` copies the webpage into the web server's directory.
+- `EXPOSE 80` documents the port used by the web server.
+
+## STEP 9: Create the Docker Compose File
+
+1. Open `docker-compose.yml` in the main `ai-compose-app` folder.
+2. Copy and paste the following code.
+3. Press Ctrl + S to save the file.
+
+### Code for docker-compose.yml
+
+    services:
+      frontend:
+        build: ./frontend
+        ports:
+          - "8080:80"
+        depends_on:
+          - ai
+
+      ai:
+        build: ./ai
+        ports:
+          - "5000:5000"
+        depends_on:
+          - database
+
+      database:
+        image: postgres:16
+        environment:
+          POSTGRES_USER: aiuser
+          POSTGRES_PASSWORD: aipassword
+          POSTGRES_DB: aidb
+        volumes:
+          - postgres_data:/var/lib/postgresql/data
+
+    volumes:
+      postgres_data:
+
+**Explanation:**
+
+This file defines three services:
+
+- `frontend`: Displays the webpage.
+- `ai`: Provides the demo prediction.
+- `database`: Runs a PostgreSQL database.
+
+The frontend is available on port 8080, and the AI service is available on port 5000.
+
+The database uses a volume to preserve its data when the container is removed.
+
+**Note:** The database is started, but this demonstration application does not actually store prediction data in it.
+
+## STEP 10: Open the Terminal
+
+1. In VS Code, click Terminal.
+2. Select New Terminal.
+3. Make sure the terminal is inside the `ai-compose-app` folder.
+
+If the terminal is in a different folder, enter:
+
+    cd "$HOME\Desktop\ai-compose-app"
+
+4. Press Enter.
+
+**Explanation:**
+
+The terminal is used to execute Docker commands.
+
+## STEP 11: Build and Start All Services
+
+1. In the terminal, enter the following command:
+
+    docker compose up --build
+
+2. Press Enter.
+3. Wait until Docker builds the images and starts the services.
+4. The first run may take several minutes because Docker may need to download images.
+5. Keep the terminal open while testing the application.
+
+**Explanation:**
+
+- `docker compose` runs Docker Compose.
+- `up` starts the services.
+- `--build` builds the required images before starting the services.
+
+This command builds and starts the frontend, AI service, and database.
+
+## STEP 12: Test the Web Application
+
+### A. Test the Frontend
+
+1. Open Google Chrome.
+2. Enter the following address:
+
+    http://localhost:8080
+
+3. Press Enter.
+
+**Expected output:**
+
+    Web-Based AI Application
+
+The webpage should display a Get Prediction button.
+
+### B. Test the Prediction
+
+1. Click the Get Prediction button.
+2. Wait for the result.
+
+**Expected output:**
+
+    This is a demo prediction
+
+**Explanation:**
+
+The webpage sends a request to the AI service and displays the returned demo prediction.
+
+## STEP 13: Check the Running Containers
+
+1. Open a second terminal in VS Code by clicking Terminal → New Terminal.
+2. Enter the following command:
+
+    docker compose ps
+
+3. Press Enter.
+
+**Expected output:**
+
+The services should be listed with names corresponding to:
+
+- `frontend`
+- `ai`
+- `database`
+
+Their status should indicate that they are running.
+
+**Explanation:**
+
+The `docker compose ps` command displays the containers associated with the Compose project and their status.
+
+## STEP 14: Stop the Application
+
+1. Return to the first terminal where `docker compose up --build` is running.
+2. Press Ctrl + C.
+3. Wait for the processes to stop.
+4. Enter the following command:
+
+    docker compose down
+
+5. Press Enter.
+
+**Explanation:**
+
+The `docker compose down` command stops and removes the containers created by Docker Compose.
+
+The project files remain unchanged. The database volume is also preserved unless explicitly removed.
+
+## Important Docker Compose Commands
+
+1. `docker compose up --build` — Builds and starts all services.
+2. `docker compose ps` — Displays the status of the services.
+3. `docker compose logs` — Displays service logs.
+4. `docker compose down` — Stops and removes the containers.
+
+## Result
+
+Docker Compose was used to define and run a web-based application with separate frontend, AI-service, and database containers. The webpage and demo prediction were tested, and the application was stopped after testing.
+
+**Note:** This is a demonstration application. It returns a sample prediction and does not use a trained AI model or store prediction data in the database.
+
+# VIVA QUESTIONS AND ANSWERS
+
+**1. What is Docker Compose?**
+
+Docker Compose is a tool used to run multiple containers together using a single configuration file.
+
+**2. What is a container?**
+
+A container is an isolated environment in which an application runs.
+
+**3. Why are separate containers used?**
+
+They keep the frontend, AI service, and database separate and easier to manage.
+
+**4. What is docker-compose.yml?**
+
+It is the configuration file that defines the services and settings for the application.
+
+**5. What does docker compose up do?**
+
+It builds and starts the services defined in the Compose file when used with the `--build` option.
+
+**6. What does docker compose down do?**
+
+It stops and removes the containers created by Docker Compose.
+
+**7. What is a frontend?**
+
+The frontend is the part of an application that users see and interact with.
+
+**8. What is a database?**
+
+A database is used to store and organize information.
+
+**9. What is Flask?**
+
+Flask is a Python library used to create web applications.
+
+**10. What is the purpose of Nginx?**
+
+Nginx is a web server used to serve the HTML webpage.
+
+**11. What is a Docker volume?**
+
+A Docker volume stores data separately from a container so that the data can remain available when the container is removed.
+
+**12. Is this a real AI application?**
+
+No. It is a demonstration application that returns a sample prediction. It does not use a trained AI model.
