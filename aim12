@@ -1,0 +1,1631 @@
+# PRACTICAL: AUTOMATING DEPLOYMENT OF AN APPLICATION USING GITHUB, DOCKER, JENKINS, AND KUBERNETES
+
+## 1. AIM
+
+To automate the process of retrieving application code from GitHub, building a Docker image, pushing the image to Docker Hub, and deploying the application on Kubernetes using Jenkins.
+
+## 2. SOFTWARE REQUIRED
+
+1. Windows computer
+2. Visual Studio Code
+3. Python
+4. Git
+5. GitHub account
+6. Docker Desktop
+7. Docker Hub account
+8. Java Development Kit (JDK)
+9. Jenkins
+10. Minikube
+11. kubectl
+
+## 3. UNDERSTAND THE PRACTICAL FIRST
+
+Before starting, understand what each tool does.
+
+| Tool | Meaning in easy English |
+|---|---|
+| VS Code | Used to create and edit our application files. |
+| Python | The programming language used to write our application. |
+| Git | Tracks changes made to our files. |
+| GitHub | Stores our project files online. |
+| Docker | Packages our application into an image. |
+| Docker Hub | Stores our Docker images online. |
+| Kubernetes | Runs and manages our application containers. |
+| Minikube | Creates a small Kubernetes cluster on our computer. |
+| kubectl | Sends commands to Kubernetes. |
+| Java | Required to run Jenkins. |
+| Jenkins | Automates the steps of building, uploading, and deploying our application. |
+
+### What are we going to do?
+
+We will create a small application that displays:
+
+**AI Model Application is Running!**
+
+Then we will perform these tasks:
+
+1. Create the application in VS Code.
+2. Upload the project to GitHub.
+3. Build a Docker image.
+4. Run the application using Docker.
+5. Upload the Docker image to Docker Hub.
+6. Start Kubernetes using Minikube.
+7. Install and open Jenkins.
+8. Create a Jenkins pipeline.
+9. Configure Docker Hub credentials in Jenkins.
+10. Run the pipeline.
+11. Check whether the application is running in Kubernetes.
+
+### Important
+
+This is a demonstration application. It does not train or run a real AI model.
+
+---
+
+# PART A: PREPARE YOUR COMPUTER
+
+## STEP 1: INSTALL AND OPEN VISUAL STUDIO CODE
+
+### If VS Code is already installed
+
+1. Click the Windows Start menu.
+2. Type `Visual Studio Code`.
+3. Click the application to open it.
+
+### If VS Code is not installed
+
+Visit the official VS Code website:
+
+[Download Visual Studio Code](https://code.visualstudio.com/Download?utm_source=chatgpt.com)
+
+Download the Windows version and follow the installation instructions.
+
+## STEP 2: INSTALL PYTHON
+
+1. Open your browser.
+2. Visit the official Python website:
+
+   [Download Python](https://www.python.org/downloads/windows/?utm_source=chatgpt.com)
+
+3. Download a suitable Python 3 version.
+4. Open the downloaded installer.
+5. If the installer offers the option **Add Python to PATH**, select it.
+6. Click Install and wait for installation to finish.
+
+### Check whether Python is installed
+
+1. Open VS Code.
+2. Click **Terminal** at the top.
+3. Click **New Terminal**.
+4. Type:
+
+```powershell
+python --version
+```
+
+5. Press Enter.
+
+You should see a Python version number.
+
+If `python` is not recognized, try:
+
+```powershell
+py --version
+```
+
+If neither command works, check the installation before continuing.
+
+## STEP 3: INSTALL GIT
+
+Git is used to upload our project to GitHub.
+
+### Install Git
+
+1. Open your browser.
+2. Visit:
+
+   [Download Git for Windows](https://git-scm.com/install/windows?utm_source=chatgpt.com)
+
+3. Download Git for Windows.
+4. Open the installer.
+5. Follow the installation instructions.
+6. If you are unsure about the installation options, keep the recommended defaults.
+7. Finish the installation.
+
+### Check Git
+
+1. Open VS Code.
+2. Click **Terminal → New Terminal**.
+3. Type:
+
+```powershell
+git --version
+```
+
+4. Press Enter.
+
+You should see a Git version number.
+
+If the command is not recognized, close and reopen VS Code, then try again.
+
+## STEP 4: INSTALL AND START DOCKER DESKTOP
+
+Docker will package our application.
+
+### Install Docker Desktop
+
+If Docker Desktop is already installed, open it and wait until it is running.
+
+Otherwise:
+
+1. Visit the official Docker installation guide:
+
+   [Install Docker Desktop on Windows](https://docs.docker.com/desktop/setup/install/windows-install/?utm_source=chatgpt.com)
+
+2. Follow the Windows installation instructions.
+3. Open the downloaded installer.
+4. Follow the instructions displayed.
+5. Restart your computer if requested.
+6. Open Docker Desktop.
+7. Wait until Docker finishes starting.
+
+If Docker asks you to install or enable WSL 2, follow the instructions it provides.
+
+### Check Docker
+
+Open VS Code and select **Terminal → New Terminal**.
+
+Type:
+
+```powershell
+docker --version
+```
+
+Press Enter.
+
+You should see a Docker version number.
+
+Now type:
+
+```powershell
+docker info
+```
+
+Press Enter.
+
+Docker should display information about its client and server.
+
+If Docker cannot connect, open Docker Desktop and wait until it is running.
+
+## STEP 5: INSTALL MINIKUBE AND KUBECTL
+
+### Install Minikube
+
+1. Open your browser.
+2. Visit:
+
+   [Minikube installation instructions](https://minikube.sigs.k8s.io/docs/start/?utm_source=chatgpt.com)
+
+3. Follow the Windows installation instructions.
+4. Complete the installation.
+
+### Check Minikube
+
+Open a new VS Code terminal and enter:
+
+```powershell
+minikube version
+```
+
+Press Enter.
+
+A version number should appear.
+
+### Install kubectl
+
+1. Visit:
+
+   [Install kubectl on Windows](https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/?utm_source=chatgpt.com)
+
+2. Follow the Windows installation instructions.
+3. Finish the installation.
+
+Check kubectl:
+
+```powershell
+kubectl version --client
+```
+
+Press Enter.
+
+A client version should appear.
+
+## STEP 6: INSTALL JAVA
+
+Jenkins needs a compatible Java version to run.
+
+### Check whether Java is installed
+
+In the VS Code terminal, type:
+
+```powershell
+java -version
+```
+
+Press Enter.
+
+If Java is installed, the version information will appear.
+
+For a current Jenkins installation, use a Java version supported by that Jenkins release. Java 21 is a suitable choice for many Jenkins installations, but check the requirements of the version you download.
+
+### If Java is not installed
+
+1. Visit the official Java website:
+
+   [Java downloads](https://www.oracle.com/java/technologies/downloads/?utm_source=chatgpt.com)
+
+2. Download a Windows x64 installer for a supported Java version.
+3. Open the installer.
+4. Follow the installation instructions.
+5. Finish the installation.
+6. Close and reopen VS Code.
+7. Run:
+
+```powershell
+java -version
+```
+
+If Java is not recognized after installation, Windows may need the correct PATH configuration.
+
+## STEP 7: INSTALL JENKINS
+
+Jenkins automates the deployment process.
+
+1. Open your browser.
+2. Visit the official Jenkins website:
+
+   [Jenkins download and installation](https://www.jenkins.io/download/?utm_source=chatgpt.com)
+
+3. Find the Windows installation instructions.
+4. Download the Windows installer if available for your chosen Jenkins release.
+5. Run the installer.
+6. Follow the installation instructions.
+7. Make sure the installation uses a compatible Java version.
+8. Finish the installation.
+
+### Open Jenkins
+
+1. Open Google Chrome.
+2. Click the address bar.
+3. Type:
+
+   `http://localhost:8080`
+
+4. Press Enter.
+
+If the Jenkins setup screen appears, continue with the initial setup instructions.
+
+If the page does not open, Jenkins may not be installed or running. Do not continue to pipeline configuration until Jenkins is accessible.
+
+### Complete the first-time Jenkins setup
+
+Depending on your installation, Jenkins may ask for an initial administrator password.
+
+Follow the instructions displayed on the Jenkins screen to locate the password.
+
+Enter it into Jenkins and continue.
+
+If Jenkins asks you to install suggested plugins, choose the suggested plugins option.
+
+Create the administrator account if prompted.
+
+When setup finishes, you should see the Jenkins dashboard.
+
+**Important:** If Jenkins asks you to install plugins, install the required plugins before creating the pipeline. The Git and Pipeline plugins are especially important.
+
+---
+
+# PART B: CREATE THE APPLICATION
+
+## STEP 8: CREATE THE PROJECT FOLDER
+
+We will store all the application files in one folder.
+
+### Create the folder
+
+1. Go to your Windows Desktop.
+2. Right-click an empty area.
+3. Click **New**.
+4. Click **Folder**.
+5. Type:
+
+   `ai-model-app`
+
+6. Press Enter.
+
+Your folder should now be visible on the Desktop.
+
+### Open the folder in VS Code
+
+1. Open VS Code.
+2. Click **File**.
+3. Click **Open Folder**.
+4. Select your Desktop.
+5. Click the `ai-model-app` folder.
+6. Click **Select Folder**.
+
+The folder should appear in the Explorer panel on the left.
+
+## STEP 9: CREATE app.py
+
+This file contains the application code.
+
+### Create the file
+
+1. Look at the Explorer panel on the left.
+2. Move your mouse over `ai-model-app`.
+3. Click the **New File** icon.
+4. Type:
+
+   `app.py`
+
+5. Press Enter.
+
+A blank file will open.
+
+### Paste the code
+
+Copy the following code and paste it into `app.py`.
+
+```python
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "AI Model Application is Running!"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+```
+
+Press **Ctrl + S** to save the file.
+
+### What does this code do?
+
+- Flask creates the web application.
+- The home route displays our message.
+- The application listens on port 5000.
+
+## STEP 10: CREATE requirements.txt
+
+This file specifies the Python library needed by our application.
+
+1. In the Explorer panel, click the New File icon.
+2. Type:
+
+   `requirements.txt`
+
+3. Press Enter.
+4. Paste the following:
+
+```text
+Flask
+```
+
+5. Press **Ctrl + S**.
+
+This file is now complete.
+
+## STEP 11: CREATE Dockerfile
+
+The Dockerfile tells Docker how to package our application.
+
+1. In the Explorer panel, click the New File icon.
+2. Type:
+
+   `Dockerfile`
+
+3. Press Enter.
+
+**Important:** The filename should be exactly `Dockerfile`, without `.txt` or `.py`.
+
+Paste this code:
+
+```dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
+```
+
+Press **Ctrl + S**.
+
+## STEP 12: CREATE deployment.yaml
+
+This file contains the Kubernetes deployment instructions.
+
+1. In the Explorer panel, click the New File icon.
+2. Type:
+
+   `deployment.yaml`
+
+3. Press Enter.
+
+Paste the following code:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-model-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-model-app
+  template:
+    metadata:
+      labels:
+        app: ai-model-app
+    spec:
+      containers:
+        - name: ai-model-app
+          image: YOUR_DOCKERHUB_USERNAME/ai-model-app:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+```
+
+Press **Ctrl + S**.
+
+**Important:** We will replace `YOUR_DOCKERHUB_USERNAME` with your actual Docker Hub username later.
+
+Do not leave the placeholder in the final file.
+
+## STEP 13: CREATE Jenkinsfile
+
+The Jenkinsfile tells Jenkins which tasks to perform.
+
+1. In the Explorer panel, click the New File icon.
+2. Type exactly:
+
+   `Jenkinsfile`
+
+3. Press Enter.
+
+Do not add `.txt` or `.groovy` to the filename.
+
+We will paste the Jenkins pipeline code in Step 29 after setting up the Docker Hub credentials.
+
+For now, leave the file empty and save it with **Ctrl + S**.
+
+### Check the folder
+
+The Explorer panel should now show:
+
+```text
+ai-model-app/
+├── app.py
+├── requirements.txt
+├── Dockerfile
+├── deployment.yaml
+└── Jenkinsfile
+```
+
+Make sure all five files are inside the same folder.
+
+---
+
+# PART C: CREATE THE GITHUB REPOSITORY
+
+## STEP 14: CREATE A REPOSITORY ON GITHUB
+
+GitHub stores our project files online.
+
+### Open GitHub
+
+1. Open Google Chrome.
+2. Visit:
+
+   [GitHub](https://github.com?utm_source=chatgpt.com)
+
+3. Sign in to your account.
+4. If you do not have an account, create one.
+
+### Create the repository
+
+1. On GitHub, click the **+** button near the top-right corner.
+2. Select **New repository**.
+3. In Repository name, type:
+
+   `ai-model-app`
+
+4. Choose **Public** if your practical allows a public repository.
+5. Leave the README option unchecked because we already have local project files.
+6. Click **Create repository**.
+
+GitHub will display your new repository page.
+
+Keep this page open.
+
+## STEP 15: OPEN THE TERMINAL IN VS CODE
+
+Return to VS Code.
+
+1. Click **Terminal** at the top.
+2. Click **New Terminal**.
+
+The terminal appears at the bottom.
+
+We will type Git commands here.
+
+### Move into the project folder
+
+Type:
+
+```powershell
+cd "$HOME\Desktop\ai-model-app"
+```
+
+Press Enter.
+
+If the folder cannot be found, locate `ai-model-app` in File Explorer and use its actual path.
+
+For example, if your Desktop is under OneDrive, the path may be different.
+
+## STEP 16: CHECK GIT
+
+In the terminal, type:
+
+```powershell
+git --version
+```
+
+Press Enter.
+
+If a Git version appears, continue.
+
+If the command is not recognized, install Git using the instructions in Step 3, then reopen the terminal.
+
+## STEP 17: INITIALIZE THE PROJECT
+
+Enter the following command:
+
+```powershell
+git init
+```
+
+Press Enter.
+
+This initializes Git in your project folder.
+
+Next, type:
+
+```powershell
+git add .
+```
+
+Press Enter.
+
+This stages the project files for saving in Git.
+
+Next, type:
+
+```powershell
+git commit -m "Add AI model application"
+```
+
+Press Enter.
+
+This creates the first Git commit.
+
+If Git asks you to configure your name and email, use the name and email you want associated with your Git commits:
+
+```powershell
+git config --global user.name "Your Name"
+```
+
+```powershell
+git config --global user.email "your-email@example.com"
+```
+
+Replace the example values with your own information. These commands set your Git commit identity; they do not sign you in to GitHub.
+
+After configuring the identity, run the commit command again.
+
+## STEP 18: CONNECT YOUR PROJECT TO GITHUB
+
+Return to your GitHub repository page.
+
+Find the HTTPS repository URL. It will look similar to:
+
+```text
+https://github.com/YOUR-USERNAME/ai-model-app.git
+```
+
+Copy your actual repository URL.
+
+Return to VS Code.
+
+Enter the following command, replacing the example URL with your actual URL:
+
+```powershell
+git remote add origin https://github.com/YOUR-USERNAME/ai-model-app.git
+```
+
+Press Enter.
+
+**Important:** Replace `YOUR-USERNAME` with your GitHub username.
+
+If Git says that `origin` already exists, do not repeat this command. Check the existing remote with:
+
+```powershell
+git remote -v
+```
+
+If it points to the wrong repository, update it using:
+
+```powershell
+git remote set-url origin https://github.com/YOUR-USERNAME/ai-model-app.git
+```
+
+Replace the example URL with your actual repository URL.
+
+## STEP 19: UPLOAD THE PROJECT TO GITHUB
+
+Run:
+
+```powershell
+git branch -M main
+```
+
+Press Enter.
+
+Then run:
+
+```powershell
+git push -u origin main
+```
+
+Press Enter.
+
+If GitHub asks you to authenticate, follow the authentication instructions displayed by Git or your browser.
+
+If the upload succeeds, return to GitHub and refresh the repository page.
+
+You should see the project files.
+
+**Checkpoint:** Confirm that your files are visible on GitHub before continuing.
+
+---
+
+# PART D: BUILD AND TEST THE DOCKER APPLICATION
+
+## STEP 20: CHECK DOCKER
+
+Make sure Docker Desktop is open and running.
+
+In VS Code, open a terminal and run:
+
+```powershell
+docker --version
+```
+
+Press Enter.
+
+Then run:
+
+```powershell
+docker info
+```
+
+Press Enter.
+
+If both commands work, continue.
+
+## STEP 21: BUILD THE DOCKER IMAGE
+
+Make sure the terminal is in your project folder:
+
+```powershell
+cd "$HOME\Desktop\ai-model-app"
+```
+
+Press Enter.
+
+Now run:
+
+```powershell
+docker build -t ai-model-app:latest .
+```
+
+Press Enter.
+
+Wait for the build to finish.
+
+The first build may take several minutes because Docker may need to download the Python image and install Flask.
+
+### Check the image
+
+Run:
+
+```powershell
+docker images
+```
+
+Press Enter.
+
+Look for:
+
+`ai-model-app`
+
+If it appears, the image has been created.
+
+## STEP 22: RUN THE APPLICATION USING DOCKER
+
+Run:
+
+```powershell
+docker run -d --name ai-model-container -p 5000:5000 ai-model-app:latest
+```
+
+Press Enter.
+
+This command starts a container from the image.
+
+Check whether it is running:
+
+```powershell
+docker ps
+```
+
+Press Enter.
+
+You should see a container named:
+
+`ai-model-container`
+
+### Open the application
+
+1. Open Google Chrome.
+2. Enter:
+
+   `http://localhost:5000`
+
+3. Press Enter.
+
+The page should display:
+
+**AI Model Application is Running!**
+
+If it does not work, check the container logs:
+
+```powershell
+docker logs ai-model-container
+```
+
+Read the error before continuing.
+
+### Stop the test container
+
+Before deploying the application through Kubernetes, stop and remove the test container.
+
+Run:
+
+```powershell
+docker stop ai-model-container
+```
+
+Press Enter.
+
+Then run:
+
+```powershell
+docker rm ai-model-container
+```
+
+Press Enter.
+
+This frees port 5000 for later testing through Kubernetes.
+
+---
+
+# PART E: UPLOAD THE DOCKER IMAGE TO DOCKER HUB
+
+## STEP 23: CREATE A DOCKER HUB ACCOUNT
+
+1. Open Google Chrome.
+2. Visit:
+
+   [Docker Hub](https://hub.docker.com?utm_source=chatgpt.com)
+
+3. Sign in or create an account.
+4. Note your Docker Hub username.
+
+For example, if your username is `student123`, your image name will be:
+
+`student123/ai-model-app:latest`
+
+Use your own username, not this example.
+
+## STEP 24: SIGN IN TO DOCKER HUB FROM THE TERMINAL
+
+Return to VS Code.
+
+Open a new terminal and enter:
+
+```powershell
+docker login
+```
+
+Press Enter.
+
+Follow the instructions displayed to sign in.
+
+Depending on the Docker version and authentication method, Docker may open a browser or ask for credentials.
+
+Do not share your Docker Hub password or access token.
+
+## STEP 25: TAG THE DOCKER IMAGE
+
+Suppose your Docker Hub username is `student123`.
+
+You would run:
+
+```powershell
+docker tag ai-model-app:latest student123/ai-model-app:latest
+```
+
+Replace `student123` with your actual Docker Hub username.
+
+Press Enter.
+
+This gives the image a name that identifies your Docker Hub repository.
+
+## STEP 26: PUSH THE IMAGE TO DOCKER HUB
+
+Using the same example username, run:
+
+```powershell
+docker push student123/ai-model-app:latest
+```
+
+Replace `student123` with your actual Docker Hub username.
+
+Press Enter.
+
+Wait for the upload to finish.
+
+Now open Docker Hub in your browser.
+
+1. Sign in.
+2. Open your repositories.
+3. Find `ai-model-app`.
+
+If the image upload succeeded, the repository should show the uploaded image.
+
+**Checkpoint:** Make sure the Docker image is available on Docker Hub.
+
+---
+
+# PART F: START KUBERNETES
+
+## STEP 27: CHECK MINIKUBE AND KUBECTL
+
+In VS Code, open a terminal.
+
+Check Minikube:
+
+```powershell
+minikube version
+```
+
+Press Enter.
+
+Check kubectl:
+
+```powershell
+kubectl version --client
+```
+
+Press Enter.
+
+If either command is not recognized, install the missing tool before continuing.
+
+## STEP 28: START MINIKUBE
+
+Make sure Docker Desktop is running.
+
+Enter:
+
+```powershell
+minikube start --driver=docker
+```
+
+Press Enter.
+
+Wait until Minikube finishes starting.
+
+Now check the Kubernetes node:
+
+```powershell
+kubectl get nodes
+```
+
+Press Enter.
+
+The Minikube node should show status:
+
+`Ready`
+
+If the node is not ready, wait briefly and check again.
+
+### Update deployment.yaml
+
+Return to VS Code.
+
+Open `deployment.yaml`.
+
+Find this line:
+
+```yaml
+image: YOUR_DOCKERHUB_USERNAME/ai-model-app:latest
+```
+
+Replace `YOUR_DOCKERHUB_USERNAME` with your actual Docker Hub username.
+
+For example, if the username were `student123`, the line would be:
+
+```yaml
+image: student123/ai-model-app:latest
+```
+
+Save the file with **Ctrl + S**.
+
+Do not leave the placeholder in the file.
+
+---
+
+# PART G: CONFIGURE JENKINS
+
+## STEP 29: OPEN JENKINS
+
+1. Open Google Chrome.
+2. Enter:
+
+   `http://localhost:8080`
+
+3. Press Enter.
+4. Sign in to Jenkins using the administrator account you created.
+
+If Jenkins does not open, check that Jenkins is installed and running before continuing.
+
+## STEP 30: INSTALL REQUIRED JENKINS PLUGINS
+
+The Git and Pipeline plugins are needed to retrieve your project and run the pipeline.
+
+1. Open Jenkins.
+2. Click **Manage Jenkins**.
+3. Find the Plugins section.
+4. Open the plugin installation or available plugins page, depending on your Jenkins version.
+5. Search for the Git plugin.
+6. Install it if it is missing.
+7. Search for the Pipeline plugin.
+8. Install it if it is missing.
+9. Restart Jenkins if requested.
+
+The exact appearance of the plugin screen may differ between Jenkins versions.
+
+## STEP 31: ADD DOCKER HUB CREDENTIALS
+
+Jenkins needs credentials to upload the image to Docker Hub.
+
+We will save these credentials inside Jenkins instead of writing the password in the Jenkinsfile.
+
+### Open the credentials page
+
+1. In Jenkins, click **Manage Jenkins**.
+2. Open **Credentials**.
+3. Open the appropriate system credentials store.
+4. Open **Global credentials (unrestricted)** if available.
+5. Click **Add Credentials**.
+
+### Fill in the form
+
+Enter the following information:
+
+- **Kind:** Username with password
+- **Username:** Your Docker Hub username
+- **Password:** Your Docker Hub password or access token
+- **ID:** `dockerhub-creds`
+- **Description:** `Docker Hub login`
+
+Click **Create**.
+
+The credential ID must be exactly:
+
+`dockerhub-creds`
+
+Keep your password or access token private.
+
+Do not put your password directly into the Jenkinsfile.
+
+If your Jenkins version displays the credentials settings differently, use its system or global credentials section.
+
+---
+
+# PART H: CREATE THE JENKINS PIPELINE
+
+## STEP 32: OPEN Jenkinsfile IN VS CODE
+
+Return to VS Code.
+
+Open the `ai-model-app` folder.
+
+Click the file named:
+
+`Jenkinsfile`
+
+If it is empty, that is okay.
+
+## STEP 33: PASTE THE JENKINS PIPELINE CODE
+
+The following pipeline is designed for a **Windows Jenkins agent** with access to Docker Desktop and Minikube.
+
+Before pasting the code, replace `YOUR_DOCKERHUB_USERNAME` with your actual Docker Hub username.
+
+Copy the entire code:
+
+```groovy
+pipeline {
+    agent any
+
+    environment {
+        DOCKERHUB_USERNAME = 'YOUR_DOCKERHUB_USERNAME'
+        IMAGE_NAME = 'ai-model-app'
+    }
+
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                bat 'docker build -t %DOCKERHUB_USERNAME%/%IMAGE_NAME%:latest .'
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASSWORD'
+                )]) {
+                    bat 'echo %DOCKER_PASSWORD%| docker login -u %DOCKER_USER% --password-stdin'
+                    bat 'docker push %DOCKERHUB_USERNAME%/%IMAGE_NAME%:latest'
+                    bat 'docker logout'
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                bat 'kubectl apply -f deployment.yaml'
+            }
+        }
+    }
+}
+```
+
+### Important changes
+
+1. Replace `YOUR_DOCKERHUB_USERNAME` with your actual Docker Hub username.
+2. Make sure the Jenkins credential ID is `dockerhub-creds`.
+3. Make sure the Docker Hub username in `deployment.yaml` is the same.
+4. Save the file using **Ctrl + S**.
+
+**Security note:** This is a learning pipeline. Jenkins credentials are used instead of putting the password in the file, but secret-handling behavior can vary by shell and environment. Use a properly configured Jenkins agent and avoid sharing logs or screenshots that contain credentials.
+
+## STEP 34: UPLOAD THE JENKINSFILE TO GITHUB
+
+The Jenkins pipeline retrieves the Jenkinsfile from GitHub, so the updated file must be uploaded.
+
+Return to the VS Code terminal.
+
+Make sure you are in the project folder:
+
+```powershell
+cd "$HOME\Desktop\ai-model-app"
+```
+
+Press Enter.
+
+Now run:
+
+```powershell
+git add Jenkinsfile
+```
+
+Press Enter.
+
+Then:
+
+```powershell
+git commit -m "Add Jenkins pipeline"
+```
+
+Press Enter.
+
+Then:
+
+```powershell
+git push
+```
+
+Press Enter.
+
+Refresh your GitHub repository page.
+
+Confirm that the Jenkinsfile appears.
+
+### Upload deployment.yaml as well
+
+Because you changed the Docker Hub username in `deployment.yaml`, upload that file too.
+
+Run:
+
+```powershell
+git add deployment.yaml
+```
+
+Then:
+
+```powershell
+git commit -m "Update Kubernetes deployment image"
+```
+
+Then:
+
+```powershell
+git push
+```
+
+If Git says there is nothing to commit, check whether the latest version is already on GitHub.
+
+---
+
+# PART I: CREATE THE JENKINS JOB
+
+## STEP 35: CREATE A NEW PIPELINE JOB
+
+1. Open Jenkins in your browser.
+2. Click **New Item** on the Jenkins dashboard.
+3. In the name field, type:
+
+   `ai-model-pipeline`
+
+4. Select **Pipeline**.
+5. Click **OK**.
+
+A configuration page will open.
+
+## STEP 36: CONNECT THE PIPELINE TO GITHUB
+
+Scroll down to the **Pipeline** section.
+
+Configure the fields as follows:
+
+**Definition:** Select `Pipeline script from SCM`.
+
+**SCM:** Select `Git`.
+
+**Repository URL:** Enter your actual GitHub repository URL.
+
+It should look similar to:
+
+```text
+https://github.com/YOUR-USERNAME/ai-model-app.git
+```
+
+Replace the example username with your own.
+
+**Credentials:** If your repository is public, you can usually leave credentials empty. For a private repository, configure suitable GitHub credentials.
+
+**Branch Specifier:**
+
+```text
+*/main
+```
+
+**Script Path:**
+
+```text
+Jenkinsfile
+```
+
+Check the spelling carefully.
+
+Click **Save** at the bottom of the page.
+
+Your Jenkins job is now configured to retrieve the Jenkinsfile from GitHub.
+
+---
+
+# PART J: MAKE SURE JENKINS CAN ACCESS DOCKER AND KUBERNETES
+
+## STEP 37: UNDERSTAND THIS IMPORTANT REQUIREMENT
+
+The pipeline will run commands on the Jenkins agent.
+
+That agent must be able to:
+
+1. Run Docker commands.
+2. Push images to Docker Hub.
+3. Run kubectl commands.
+4. Access the Minikube Kubernetes cluster.
+
+**Commands working in your normal VS Code terminal do not automatically mean they will work in Jenkins.**
+
+Jenkins may run as a Windows service under a different account. That account may not have access to your Docker Desktop connection or your Minikube configuration.
+
+### Check Docker access
+
+On the Windows machine and account configured to run the Jenkins agent, the following command must work:
+
+```powershell
+docker --version
+```
+
+### Check Kubernetes access
+
+On that same agent, run:
+
+```powershell
+kubectl get nodes
+```
+
+The Minikube node should show `Ready`.
+
+If either command fails when run by Jenkins, the pipeline will not be able to complete those stages.
+
+You may need to configure the Jenkins service or agent to use the correct Windows account and Kubernetes configuration. Do not expose your credentials while doing so.
+
+---
+
+# PART K: RUN THE PIPELINE
+
+## STEP 38: CHECK THE JENKINS CONFIGURATION
+
+Before running the pipeline, check the following:
+
+- The GitHub repository contains all five project files.
+- The Docker image has been pushed to Docker Hub.
+- The Docker Hub username is correct in both `Jenkinsfile` and `deployment.yaml`.
+- The Jenkins credential ID is `dockerhub-creds`.
+- Minikube is running.
+- The Kubernetes node is `Ready`.
+- Jenkins can access Docker and kubectl.
+
+## STEP 39: RUN THE PIPELINE
+
+1. Open Jenkins.
+2. Click the `ai-model-pipeline` job.
+3. Click **Build Now**.
+4. Look for the new build under Build History.
+5. Click the build number.
+6. Click **Console Output**.
+7. Watch the commands as Jenkins runs them.
+
+The pipeline should perform these stages:
+
+### Stage 1: Build Docker Image
+
+Jenkins builds the Docker image using the Dockerfile.
+
+### Stage 2: Push to Docker Hub
+
+Jenkins signs in using the saved credential and pushes the image to Docker Hub.
+
+### Stage 3: Deploy to Kubernetes
+
+Jenkins applies `deployment.yaml` to the Kubernetes cluster.
+
+A successful pipeline should finish with:
+
+```text
+Finished: SUCCESS
+```
+
+If you see `Finished: FAILURE`, read the Console Output to find the first command that failed. The failure message usually indicates which part needs fixing.
+
+---
+
+# PART L: VERIFY THE KUBERNETES DEPLOYMENT
+
+## STEP 40: CHECK THE DEPLOYMENT
+
+Open VS Code.
+
+Click **Terminal → New Terminal**.
+
+Enter:
+
+```powershell
+kubectl get deployments
+```
+
+Press Enter.
+
+You should see a Deployment named:
+
+`ai-model-app`
+
+The deployment should eventually show one ready replica.
+
+## STEP 41: CHECK THE POD
+
+Enter:
+
+```powershell
+kubectl get pods
+```
+
+Press Enter.
+
+The application pod should eventually show:
+
+`Running`
+
+If it shows `ImagePullBackOff`, check the Docker Hub username and image name in `deployment.yaml`.
+
+If it shows `CrashLoopBackOff`, check the application logs:
+
+```powershell
+kubectl logs deployment/ai-model-app
+```
+
+## STEP 42: OPEN THE APPLICATION
+
+Run:
+
+```powershell
+kubectl port-forward deployment/ai-model-app 5000:5000
+```
+
+Press Enter.
+
+Keep this terminal open.
+
+Open Google Chrome and visit:
+
+```text
+http://localhost:5000
+```
+
+The browser should display:
+
+**AI Model Application is Running!**
+
+This confirms that the application can be accessed through Kubernetes.
+
+---
+
+# PART M: TROUBLESHOOTING
+
+## Problem 1: Jenkins does not open
+
+Try visiting:
+
+```text
+http://localhost:8080
+```
+
+If the page does not open, check whether Jenkins is installed and running.
+
+On Windows, you can press **Windows + R**, type `services.msc`, and press Enter to open Services. Look for the Jenkins service if you installed Jenkins as a Windows service.
+
+If it is stopped, start it. If it fails to start, check the Jenkins installation and Java requirements.
+
+## Problem 2: Docker commands fail
+
+Open Docker Desktop and wait until it is running.
+
+Then try:
+
+```powershell
+docker info
+```
+
+If this works in VS Code but fails in Jenkins, the Jenkins agent may not have access to Docker Desktop.
+
+## Problem 3: Git commands fail
+
+Check Git:
+
+```powershell
+git --version
+```
+
+If Git is not recognized, install Git and reopen the terminal.
+
+If Git reports that the remote already exists, check it using:
+
+```powershell
+git remote -v
+```
+
+## Problem 4: Docker image cannot be uploaded
+
+Check that you have signed in:
+
+```powershell
+docker login
+```
+
+Then verify the image name and Docker Hub username.
+
+## Problem 5: Minikube does not start
+
+Check that Docker Desktop is running.
+
+Then run:
+
+```powershell
+minikube status
+```
+
+If Minikube is stopped, try:
+
+```powershell
+minikube start --driver=docker
+```
+
+Read any error messages before trying further changes.
+
+## Problem 6: Kubernetes cannot find the image
+
+Check the image name in `deployment.yaml`.
+
+It must match the image uploaded to Docker Hub, including the username and tag.
+
+For example:
+
+```yaml
+image: YOUR_DOCKERHUB_USERNAME/ai-model-app:latest
+```
+
+Replace the placeholder with your actual Docker Hub username.
+
+## Problem 7: Jenkins cannot deploy to Kubernetes
+
+Run this command from the Jenkins agent:
+
+```powershell
+kubectl get nodes
+```
+
+If it fails, Jenkins may not have access to the Minikube cluster configuration.
+
+Configure access for the Jenkins agent before running the deployment stage again.
+
+---
+
+# 4. IMPORTANT COMMANDS AND THEIR PURPOSES
+
+| Command | Purpose |
+|---|---|
+| `git init` | Initializes Git in the project folder. |
+| `git add .` | Stages project files. |
+| `git commit -m "message"` | Saves a Git commit. |
+| `git push` | Uploads committed changes to GitHub. |
+| `docker build -t ai-model-app:latest .` | Builds the Docker image. |
+| `docker run` | Starts a container from an image. |
+| `docker images` | Lists Docker images. |
+| `docker push` | Uploads an image to Docker Hub. |
+| `minikube start --driver=docker` | Starts the local Kubernetes cluster. |
+| `kubectl get nodes` | Displays Kubernetes nodes. |
+| `kubectl apply -f deployment.yaml` | Creates or updates Kubernetes resources. |
+| `kubectl get deployments` | Displays Kubernetes deployments. |
+| `kubectl get pods` | Displays Kubernetes pods. |
+| `kubectl port-forward` | Allows local access to the application. |
+
+---
+
+# 5. VIVA QUESTIONS AND ANSWERS
+
+**Q1. What is Git?**
+
+Git is a tool used to track changes in files.
+
+**Q2. What is GitHub?**
+
+GitHub is an online platform used to store and share project repositories.
+
+**Q3. What is Docker?**
+
+Docker packages an application and its required files into an image.
+
+**Q4. What is Docker Hub?**
+
+Docker Hub is an online service used to store and share Docker images.
+
+**Q5. What is Kubernetes?**
+
+Kubernetes is a system used to manage containerized applications.
+
+**Q6. What is Minikube?**
+
+Minikube creates a small Kubernetes cluster on a local computer.
+
+**Q7. What is Jenkins?**
+
+Jenkins is an automation tool used to build, test, and deploy applications.
+
+**Q8. What is a Jenkins pipeline?**
+
+A Jenkins pipeline defines a sequence of steps that Jenkins executes automatically.
+
+**Q9. What is a Jenkinsfile?**
+
+A Jenkinsfile contains the pipeline instructions.
+
+**Q10. What is CI/CD?**
+
+CI/CD refers to practices that automate parts of software integration, delivery, and deployment.
+
+**Q11. What is a Docker image?**
+
+A Docker image is a package used to create containers.
+
+**Q12. What is a Kubernetes Deployment?**
+
+A Deployment manages application pods and maintains the requested number of replicas.
+
+**Q13. Why do we use `kubectl apply`?**
+
+It creates or updates Kubernetes resources using a configuration file.
+
+**Q14. Why do we use Docker Hub credentials in Jenkins?**
+
+They allow Jenkins to authenticate when uploading images to Docker Hub.
+
+**Q15. What is the purpose of this practical?**
+
+It demonstrates how GitHub, Docker, Docker Hub, Jenkins, and Kubernetes can work together to automate application deployment.
+
+---
+
+# 6. WHAT TO SHOW DURING THE PRACTICAL
+
+When demonstrating your work, show the following:
+
+1. The five project files in VS Code.
+2. The project files uploaded to GitHub.
+3. The Docker image in Docker Hub.
+4. The Jenkins pipeline configuration.
+5. The Jenkins Console Output showing `Finished: SUCCESS`.
+6. The Kubernetes Deployment and pod status.
+7. The application opened in the browser at `http://localhost:5000`.
+
+# 7. RESULT
+
+The application code was stored in GitHub, packaged into a Docker image, pushed to Docker Hub, and deployed to Kubernetes using a Jenkins pipeline.
+
+The practical demonstrates how Jenkins can automate the process of building, uploading, and deploying an application.
+
+# 8. IMPORTANT NOTES
+
+1. The Flask application is a demonstration and does not train or run a real AI model.
+2. Docker Desktop must be running when using the Docker driver for Minikube.
+3. Jenkins must have access to Docker and Kubernetes to run the complete pipeline successfully.
+4. The Docker Hub username in `Jenkinsfile` and `deployment.yaml` must match your account.
+5. Never put passwords or access tokens directly in the Jenkinsfile.
+6. A successful GitHub upload does not automatically mean the Jenkins pipeline has succeeded. Always check the build's Console Output.
