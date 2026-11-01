@@ -1,0 +1,276 @@
+
+# Practical No. 8 — Jenkins
+
+## Aim
+To create a GitHub repository and configure Jenkins to automatically build a project when code changes are pushed to GitHub.
+
+## Requirements
+- Windows computer
+- Internet connection
+- VS Code
+- GitHub account
+- Jenkins
+- Python
+
+## Procedure
+
+### Step 1: Create a GitHub repository
+
+1. Open https://github.com and sign in.
+2. Click **+ → New repository**.
+3. Enter the repository name: `jenkins-demo`.
+4. Select **Public**.
+5. Tick **Add a README file**.
+6. Click **Create repository**.
+
+### Step 2: Create a project folder
+
+1. On the Desktop, create a folder named `jenkins-demo`.
+2. Open VS Code.
+3. Click **File → Open Folder**.
+4. Select the `jenkins-demo` folder.
+
+### Step 3: Create the application file
+
+1. In VS Code Explorer, right-click the folder → **New File**.
+2. Name it `app.py`.
+3. Paste this code and save using **Ctrl + S**.
+
+```python
+print("Hello! My first Jenkins project is working.")
+```
+
+### Step 4: Create the Jenkinsfile
+
+1. Right-click the project folder → **New File**.
+2. Name it exactly `Jenkinsfile` (without `.txt`).
+3. Paste this code and save it.
+
+```groovy
+pipeline {
+    agent any
+
+    stages {
+        stage('Check Project') {
+            steps {
+                echo 'Jenkins is running the project.'
+                bat 'python --version'
+                bat 'python app.py'
+            }
+        }
+    }
+}
+```
+
+### Step 5: Upload the files to GitHub
+
+1. Open the `jenkins-demo` repository on GitHub.
+2. Click **Add file → Upload files**.
+3. Select `app.py` and `Jenkinsfile` from your project folder.
+4. Upload them and click **Commit changes**.
+
+The repository should contain:
+
+```text
+jenkins-demo
+├── app.py
+├── Jenkinsfile
+└── README.md
+```
+
+### Step 6: Install and open Jenkins
+
+1. Download the Windows installer from the official Jenkins website.
+2. Run the installer and follow the setup instructions.
+3. Open your browser and visit:
+
+```text
+http://localhost:8080
+```
+
+4. Complete the initial setup and create an administrator account.
+
+### Step 7: Install the required plugins
+
+1. In Jenkins, click **Manage Jenkins**.
+2. Open **Plugins**.
+3. Search for and install:
+   - Git
+   - GitHub
+   - Pipeline
+4. Restart Jenkins if prompted.
+
+### Step 8: Create a Pipeline job
+
+1. On the Jenkins home page, click **New Item**.
+2. Enter the job name: `jenkins-demo`.
+3. Select **Pipeline**.
+4. Click **OK**.
+
+### Step 9: Connect Jenkins to GitHub
+
+1. Open the job’s **Configure** page.
+2. Find the **Pipeline** section.
+3. Set **Definition** to `Pipeline script from SCM`.
+4. Set **SCM** to `Git`.
+5. Enter your GitHub repository URL. Replace `YOUR-USERNAME` with your GitHub username.
+
+```text
+https://github.com/YOUR-USERNAME/jenkins-demo.git
+```
+
+6. Set **Branch Specifier** to:
+
+```text
+*/main
+```
+
+7. Set **Script Path** to:
+
+```text
+Jenkinsfile
+```
+
+8. Click **Save**.
+
+### Step 10: Run the first build
+
+1. Open the Jenkins job.
+2. Click **Build Now**.
+3. Click the build number under **Build History**.
+4. Click **Console Output**.
+
+The output should include:
+
+```text
+Hello! My first Jenkins project is working.
+```
+
+The build should show **Success**.
+
+### Step 11: Configure automatic builds
+
+1. Open the job’s **Configure** page.
+2. Find **Build Triggers**.
+3. Tick **Poll SCM**.
+4. Enter this schedule:
+
+```text
+H/2 * * * *
+```
+
+5. Click **Save**.
+
+Jenkins will check GitHub for changes about every two minutes.
+
+### Step 12: Test automatic triggering
+
+1. Open `app.py` in VS Code.
+2. Change the message to:
+
+```python
+print("I changed my project. Jenkins should build it again.")
+```
+
+3. Save the file.
+4. Open `app.py` on GitHub and click the pencil icon to edit it.
+5. Replace the old code with the new code.
+6. Click **Commit changes**.
+7. Wait a few minutes.
+8. Check **Build History** in Jenkins.
+
+A new build should appear after Jenkins detects the change.
+
+## Important Commands
+
+| Command | Meaning |
+|---|---|
+| `python --version` | Checks whether Python is installed |
+| `python app.py` | Runs the Python file |
+| `docker --version` | Checks whether Docker is installed |
+
+## Result
+A Jenkins Pipeline was created and connected to a GitHub repository. Jenkins was configured to check for code changes and automatically build the project when changes were pushed.
+
+## Viva Questions and Answers
+
+**1. What is Jenkins?**  
+Jenkins is an automation tool used to build and test projects.
+
+**2. What is a Jenkins Pipeline?**  
+A Jenkins Pipeline is a set of steps that Jenkins performs automatically.
+
+**3. What is a Jenkinsfile?**  
+A Jenkinsfile is a file containing the pipeline instructions.
+
+**4. What is GitHub used for in this practical?**  
+GitHub stores the project files and Jenkinsfile.
+
+**5. What is Poll SCM?**  
+Poll SCM makes Jenkins check the repository regularly for changes.
+
+**6. What is a build?**  
+A build is the process of preparing or checking a project using its source files.
+
+**Note:** Jenkins must have access to Python. If the build fails at `python --version`, check the error in **Console Output**.
+
+
+1. What is Jenkins?
+Jenkins is a tool that helps us automate software work. It can automatically download project files, build the project, and run tests. This saves time because we do not need to perform every step manually.
+
+Easy answer: Jenkins is an automation tool used to build and test projects automatically.
+2. What is automation?
+Automation means making a computer perform tasks automatically instead of doing them manually.
+
+Example: Instead of manually checking the project every time code changes, Jenkins can check and build it for us.
+3. What is GitHub?
+GitHub is an online platform where we can store and manage project files. It also keeps track of changes made to the files.
+
+Example: We upload app.py and Jenkinsfile to a GitHub repository so Jenkins can access them.
+4. What is a repository?
+A repository, or repo, is a place where project files are stored. It can also keep a history of changes made to those files.
+
+Easy answer: A repository is an online folder used to store project files.
+5. What is Git?
+Git is a version-control tool. It tracks changes made to files and helps us manage different versions of a project.
+
+Difference: Git is the tool; GitHub is a website that can store Git repositories online.
+6. What is a Jenkins Pipeline?
+A Jenkins Pipeline is a series of steps that Jenkins performs to build or test a project.
+
+Example: Jenkins downloads the project, checks the Python version, and runs app.py.
+7. What is a Jenkinsfile?
+A Jenkinsfile is a text file that contains instructions for Jenkins. It tells Jenkins which steps to perform.
+
+In this practical, the Jenkinsfile tells Jenkins to:
+1. Get the project from GitHub.
+2. Check the Python version.
+3. Run the Python file.
+8. What is a Jenkins job?
+A Jenkins job is a task configured in Jenkins. It tells Jenkins what work to perform and when to perform it.
+
+Example: jenkins-demo is the name of our Pipeline job.
+9. What is a plugin in Jenkins?
+A plugin adds extra features to Jenkins.
+
+Example: The Git plugin helps Jenkins download files from a Git repository. The Pipeline plugin allows us to create Pipeline jobs.
+10. Why do we install the Git plugin?
+The Git plugin allows Jenkins to connect to Git repositories and download project files from them.
+11. What is SCM?
+SCM stands for Source Code Management. It is used to store and manage source-code files and track their changes.
+
+In this practical, Git is used for source-code management.
+12. What does “Pipeline script from SCM” mean?
+It means Jenkins gets the Pipeline instructions from a source-code repository instead of us typing the instructions directly into Jenkins.
+
+In our practical, Jenkins reads the instructions from the Jenkinsfile stored on GitHub.
+13. What is Poll SCM?
+Poll SCM makes Jenkins check the repository regularly to see whether any files have changed.
+
+If Jenkins finds a change, it can start a new build.
+
+Easy answer: Poll SCM means Jenkins checks GitHub at regular intervals for new changes.
+14. What is a webhook?
+A webhook is a message sent from one application to another when an event happens.
+
+For example, GitHub can send a message to Jenkins when new code is pushed. Jenkins can then start a build.
