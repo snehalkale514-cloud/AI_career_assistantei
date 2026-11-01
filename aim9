@@ -1,0 +1,302 @@
+# PRACTICAL NO. 9 — DOCKER
+
+## Aim
+To create a Docker image for an AI application, run it in a container, test it, and stop the container.
+
+## 1. Check Docker Desktop
+
+1. Open Docker Desktop from the Windows Start menu.
+2. Wait until Docker Desktop shows that Docker is running.
+3. Open Visual Studio Code (VS Code).
+
+## 2. Create the Project Folder
+
+1. Go to the Desktop.
+2. Right-click and select New → Folder.
+3. Name the folder `ai-docker-app`.
+4. Open VS Code.
+5. Click File → Open Folder.
+6. Select the `ai-docker-app` folder.
+
+## 3. Create the Required Files
+
+Create the following three files inside the `ai-docker-app` folder:
+
+- `app.py`
+- `requirements.txt`
+- `Dockerfile`
+
+To create a file, right-click the folder in the VS Code Explorer panel, select New File, and enter the filename.
+
+The folder structure should look like this:
+
+    ai-docker-app/
+    ├── app.py
+    ├── requirements.txt
+    └── Dockerfile
+
+## 4. Add the Application Code
+
+1. Open `app.py` in VS Code.
+2. Copy and paste the following code.
+3. Press Ctrl + S to save the file.
+
+**Code for app.py:**
+
+    from flask import Flask, jsonify
+
+    app = Flask(__name__)
+
+    @app.route("/")
+    def home():
+        return "AI application is running!"
+
+    @app.route("/predict")
+    def predict():
+        return jsonify({"prediction": "This is a demo prediction"})
+
+    if __name__ == "__main__":
+        app.run(host="0.0.0.0", port=5000)
+
+**Explanation:**
+
+This is a simple web application created using Flask. It displays a message on the home page and provides a demo prediction when the user visits the `/predict` route.
+
+## 5. Add the Required Python Library
+
+1. Open `requirements.txt`.
+2. Enter the following line:
+
+    Flask
+
+3. Press Ctrl + S to save the file.
+
+**Explanation:**
+
+Flask is a Python library used to create web applications. This file tells Docker which Python library must be installed.
+
+## 6. Create the Dockerfile
+
+1. Open the `Dockerfile`.
+2. Copy and paste the following code.
+3. Press Ctrl + S to save the file.
+
+**Code for Dockerfile:**
+
+    FROM python:3.11-slim
+
+    WORKDIR /app
+
+    COPY requirements.txt .
+    RUN pip install --no-cache-dir -r requirements.txt
+
+    COPY app.py .
+
+    EXPOSE 5000
+
+    CMD ["python", "app.py"]
+
+**Explanation:**
+
+- `FROM` selects the Python environment.
+- `WORKDIR` sets the working directory inside the container.
+- `COPY` copies the required files into the container.
+- `RUN` installs the required Python libraries.
+- `EXPOSE` documents the port used by the application.
+- `CMD` specifies the command used to start the application.
+
+## 7. Build the Docker Image
+
+1. Open VS Code.
+2. Click Terminal → New Terminal.
+3. Make sure the terminal is inside the `ai-docker-app` folder.
+4. Enter the following command:
+
+    docker build -t ai-docker-app .
+
+5. Press Enter and wait for the build to finish.
+
+**Explanation:**
+
+This command builds a Docker image named `ai-docker-app` using the instructions in the Dockerfile. The dot (`.`) specifies the current directory as the build context.
+
+## 8. Run the Docker Container
+
+1. In the terminal, enter the following command:
+
+    docker run -d -p 5000:5000 --name ai-container ai-docker-app
+
+2. Press Enter.
+
+**Explanation:**
+
+This command creates and starts a container from the `ai-docker-app` image.
+
+- `-d` runs the container in the background.
+- `-p 5000:5000` maps port 5000 on the computer to port 5000 in the container.
+- `--name ai-container` assigns the name `ai-container` to the container.
+- `ai-docker-app` specifies the image to run.
+
+## 9. Verify That the Container Is Running
+
+1. Open the terminal.
+2. Enter the following command:
+
+    docker ps
+
+3. Press Enter.
+4. Check whether `ai-container` appears in the list of running containers.
+
+**Expected output:**
+
+The container should appear in the list with a status such as `Up`.
+
+**Explanation:**
+
+The `docker ps` command displays the currently running containers.
+
+## 10. Test the Application
+
+### Test the Home Page
+
+1. Open a web browser.
+2. Enter the following address:
+
+    http://localhost:5000
+
+3. Press Enter.
+
+**Expected output:**
+
+    AI application is running!
+
+### Test the Demo Prediction
+
+1. Enter the following address in the browser:
+
+    http://localhost:5000/predict
+
+2. Press Enter.
+
+**Expected output:**
+
+    {"prediction":"This is a demo prediction"}
+
+**Explanation:**
+
+The first URL displays the home page. The second URL returns a demo prediction in JSON format.
+
+## 11. Stop the Container
+
+1. Return to the terminal.
+2. Enter the following command:
+
+    docker stop ai-container
+
+3. Press Enter.
+
+**Explanation:**
+
+The `docker stop` command stops the running container.
+
+## 12. Remove the Container
+
+1. Enter the following command:
+
+    docker rm ai-container
+
+2. Press Enter.
+
+**Explanation:**
+
+The `docker rm` command removes the stopped container. It does not delete the Docker image or the project files.
+
+## 13. Verify the Container Has Stopped
+
+1. Enter the following command:
+
+    docker ps
+
+2. Press Enter.
+3. Check that `ai-container` no longer appears in the list of running containers.
+
+**Explanation:**
+
+This verifies that the container is no longer running.
+
+## 14. Verify the Docker Image
+
+1. Enter the following command:
+
+    docker images
+
+2. Press Enter.
+3. Check whether `ai-docker-app` appears in the list of Docker images.
+
+**Explanation:**
+
+The `docker images` command displays the Docker images stored on the computer. The `ai-docker-app` image should remain available even after the container has been removed.
+
+## Result
+
+The Docker image was built successfully, the application was run in a container, its output was tested through a web browser, and the container was stopped and removed after testing.
+
+**Note:** This is a demonstration web application that returns a sample prediction. It does not contain a trained AI model.
+
+# VIVA QUESTIONS AND ANSWERS
+
+**1. What is Docker?**
+
+Docker is a tool used to package and run applications in containers.
+
+**2. What is a Docker image?**
+
+A Docker image is a package used to create a container.
+
+**3. What is a container?**
+
+A container is an isolated environment in which an application runs.
+
+**4. What is a Dockerfile?**
+
+A Dockerfile contains instructions for building a Docker image.
+
+**5. What does the `docker build` command do?**
+
+It builds a Docker image from a Dockerfile.
+
+**6. What does the `docker run` command do?**
+
+It creates and starts a container from a Docker image.
+
+**7. What does the `docker stop` command do?**
+
+It stops a running container.
+
+**8. What does the `docker ps` command do?**
+
+It displays the currently running containers.
+
+**9. What does the `docker images` command do?**
+
+It displays the Docker images stored on the computer.
+
+**10. What is Flask?**
+
+Flask is a Python library used to develop web applications.
+
+**11. What is the purpose of a Dockerfile?**
+
+It defines the instructions required to build a Docker image.
+
+**12. What is the purpose of port mapping?**
+
+Port mapping allows users to access an application running inside a container through a port on their computer.
+
+**13. What is the difference between an image and a container?**
+
+An image is a package used to create a container, while a container is an instance created from that image.
+
+**14. Is this a real AI application?**
+
+No. It is a demonstration web application that returns a sample prediction. It does not use a trained AI model.
