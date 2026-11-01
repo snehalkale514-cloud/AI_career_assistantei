@@ -1,0 +1,28 @@
+pipeline {
+    agent any
+
+    triggers {
+        pollSCM('H/2 * * * *')
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building the project...'
+                echo 'Hello! Jenkins Pipeline is working.'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Testing the project...'
+            }
+        }
+
+        stage('Success') {
+            steps {
+                echo 'Jenkins Pipeline executed successfully!'
+            }
+        }
+    }
+}
