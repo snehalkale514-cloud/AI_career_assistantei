@@ -1,0 +1,288 @@
+
+# Practical 4: Git Bash — Data Science Project
+
+## Aim
+To create a Git repository, upload it to GitHub, create a branch, add Python programs, and use `.gitignore` to prevent a folder from being uploaded.
+
+## 1. Create a project folder
+
+1. Go to your **Desktop**.
+2. Right-click an empty area and select **New → Folder**.
+3. Name the folder `DataScienceProject`.
+4. Open the folder.
+5. Click the address bar at the top of File Explorer.
+6. Type `cmd` and press **Enter**. A Command Prompt window will open inside this folder.
+7. Type:
+
+   ```bash
+   bash
+   ```
+
+   If Git Bash opens, continue there. If it says the command is not found, close Command Prompt, right-click inside the folder, and select **Open Git Bash here**.
+
+## 2. Set up Git (first time only)
+
+In Git Bash, type these commands one at a time. Press **Enter** after each command.
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your-email@example.com"
+```
+
+Replace `Your Name` and `your-email@example.com` with your name and the email address connected to your GitHub account.
+
+## 3. Initialize the repository
+
+Make sure Git Bash is open inside the `DataScienceProject` folder. Type:
+
+```bash
+git init
+```
+
+This starts Git tracking for the project folder.
+
+## 4. Create the first Python program
+
+Type:
+
+```bash
+notepad program1.py
+```
+
+If Notepad asks whether to create the file, click **Yes**.
+
+Copy and paste this code into Notepad:
+
+```python
+for number in range(1, 11):
+    print(number, "square =", number * number)
+```
+
+In Notepad, click **File → Save**, then close Notepad.
+
+## 5. Create the palindrome program
+
+The practical says `program2`. Since this is Python, save it as `program2.py`.
+
+In Git Bash, type:
+
+```bash
+notepad program2.py
+```
+
+Click **Yes** if Notepad asks to create the file.
+
+Copy and paste:
+
+```python
+text = input("Enter a word: ")
+
+if text == text[::-1]:
+    print("It is a palindrome")
+else:
+    print("It is not a palindrome")
+```
+
+Click **File → Save**, then close Notepad.
+
+## 6. Check the programs
+
+In Git Bash, type:
+
+```bash
+python program1.py
+```
+
+If that does not work, try:
+
+```bash
+py program1.py
+```
+
+To run the palindrome program, type:
+
+```bash
+python program2.py
+```
+
+If that does not work, try:
+
+```bash
+py program2.py
+```
+
+When asked for a word, type `madam` and press **Enter**.
+
+## 7. Create a GitHub repository
+
+1. Open your browser and go to **https://github.com**.
+2. Sign in.
+3. Click the **+** button near the top-right.
+4. Click **New repository**.
+5. In **Repository name**, type `DataScienceProject`.
+6. Choose **Public** or **Private**.
+7. Leave **Add a README file** unchecked.
+8. Click **Create repository**.
+9. Keep the repository page open.
+
+GitHub will show a repository address. Copy the HTTPS address. It will look like:
+
+`https://github.com/YOUR-GITHUB-USERNAME/DataScienceProject.git`
+
+## 8. Connect your local project to GitHub
+
+Return to Git Bash. Type the following command, but replace the sample address with the HTTPS address you copied from your own GitHub repository:
+
+```bash
+git remote add origin https://github.com/YOUR-GITHUB-USERNAME/DataScienceProject.git
+```
+
+Now type:
+
+```bash
+git add program1.py program2.py
+git commit -m "Add Python programs"
+git branch -M main
+git push -u origin main
+```
+
+If GitHub asks you to sign in, follow the sign-in instructions in your browser.
+
+## 9. Create the branch `GIT-EXAM-1`
+
+In Git Bash, type:
+
+```bash
+git checkout -b GIT-EXAM-1
+```
+
+This creates the branch and switches to it.
+
+## 10. Commit and push the programs on the branch
+
+Type:
+
+```bash
+git add program1.py program2.py
+git commit -m "Add programs on GIT-EXAM-1"
+git push -u origin GIT-EXAM-1
+```
+
+If Git says there is nothing to commit, that is okay—the files may already have been committed.
+
+### Check the files on GitHub
+1. Open your GitHub repository in the browser.
+2. Click the branch dropdown, which may currently say `main`.
+3. Select `GIT-EXAM-1`.
+4. Confirm that `program1.py` and `program2.py` are visible.
+
+## 11. Create the `IGNORE` folder and text files
+
+In Git Bash, type:
+
+```bash
+mkdir IGNORE
+```
+
+Create the two files:
+
+```bash
+touch IGNORE/test1.txt
+touch IGNORE/test2.txt
+```
+
+You can put text into the files, if required:
+
+```bash
+notepad IGNORE/test1.txt
+```
+
+Type any text, save, and close Notepad. Repeat for the second file:
+
+```bash
+notepad IGNORE/test2.txt
+```
+
+## 12. Create the `.gitignore` file
+
+In Git Bash, type:
+
+```bash
+notepad .gitignore
+```
+
+If Notepad asks to create the file, click **Yes**.
+
+Paste this line:
+
+```text
+IGNORE/
+```
+
+Click **File → Save**, then close Notepad.
+
+This tells Git to ignore the `IGNORE` folder and its contents.
+
+## 13. Check that Git is ignoring the folder
+
+In Git Bash, type:
+
+```bash
+git status
+```
+
+You should see `.gitignore` listed as a new or changed file. You should **not** see `IGNORE/test1.txt` or `IGNORE/test2.txt`.
+
+## 14. Commit and push `.gitignore`
+
+Type:
+
+```bash
+git add .gitignore
+git commit -m "Ignore IGNORE directory"
+git push
+```
+
+## 15. Demonstrate that `IGNORE` was not uploaded
+
+1. Open your repository on GitHub.
+2. Select the `GIT-EXAM-1` branch.
+3. Confirm that `program1.py`, `program2.py`, and `.gitignore` are visible.
+4. Confirm that the `IGNORE` folder is not visible.
+
+The `IGNORE` folder and files still exist on your computer. Git simply ignores them and does not upload them.
+
+## Result
+A Git repository was initialized and pushed to GitHub. The `GIT-EXAM-1` branch was created, two Python programs were committed and pushed, and `.gitignore` was used to prevent the `IGNORE` directory and its files from being uploaded.
+
+## Viva Questions and Answers
+
+**1. What is Git?**  
+Git is a version control system used to track changes in files.
+
+**2. What is GitHub?**  
+GitHub is an online platform for storing and sharing Git repositories.
+
+**3. What does `git init` do?**  
+It initializes a Git repository in the current folder.
+
+**4. What does `git add` do?**  
+It selects changes to be included in the next commit.
+
+**5. What does `git commit` do?**  
+It saves selected changes in the repository’s history.
+
+**6. What does `git push` do?**  
+It uploads local commits to GitHub.
+
+**7. What is a branch?**  
+A branch is a separate line of work in a repository.
+
+**8. What is `.gitignore`?**  
+It tells Git which untracked files or folders to ignore.
+
+**9. Does `.gitignore` delete files from the computer?**  
+No. The files remain on the computer; Git just ignores them.
+
+**10. What is a palindrome?**  
+A word that reads the same forward and backward, such as `madam`.
