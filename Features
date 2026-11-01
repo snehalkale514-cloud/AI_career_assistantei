@@ -1,0 +1,2235 @@
+
+# PRACTICAL 1 — Git Bash: Multiplication Table and Branching
+
+## Aim
+Create a Git repository, upload a Python multiplication-table program, create a branch, add another program, and demonstrate the difference between branches.
+
+## Tools Required
+- Git Bash
+- Python
+- GitHub account
+- Notepad
+
+## Procedure
+
+### Part A — Create a repository on GitHub
+1. Open [https://github.com](https://github.com) and sign in.
+2. Click **+ → New repository**.
+3. Enter the repository name: `MyTech`.
+4. Select **Public**.
+5. Click **Create repository**.
+6. Keep the repository page open. You will need your GitHub username later.
+
+### Part B — Create a project folder
+1. Open **Git Bash** from the Windows Start menu.
+2. Type these commands one at a time:
+
+```bash
+mkdir MyTech
+cd MyTech
+git init
+```
+
+**Meaning:**
+- `mkdir MyTech` creates a folder named `MyTech`.
+- `cd MyTech` moves into that folder.
+- `git init` starts a Git repository in the folder.
+
+### Part C — Configure your name and email
+Type these commands in Git Bash. Replace the example name and email with your own:
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your-email@example.com"
+```
+
+Use the email connected to your GitHub account.
+
+### Part D — Create and run the first Python program
+1. In Git Bash, type:
+
+```bash
+notepad program1.py
+```
+
+2. If Notepad asks whether to create the file, click **Yes**.
+3. Copy this code into Notepad:
+
+```python
+n = int(input("Enter a number: "))
+
+for i in range(1, 11):
+    print(n, "x", i, "=", n * i)
+```
+
+4. Click **File → Save**, then close Notepad.
+5. In Git Bash, run:
+
+```bash
+python program1.py
+```
+
+6. Enter `5` when asked for a number.
+
+**Expected output:**
+
+```text
+Enter a number: 5
+5 x 1 = 5
+5 x 2 = 10
+5 x 3 = 15
+5 x 4 = 20
+5 x 5 = 25
+5 x 6 = 30
+5 x 7 = 35
+5 x 8 = 40
+5 x 9 = 45
+5 x 10 = 50
+```
+
+**Code explanation:**
+- `input()` asks the user to enter a number.
+- `int()` converts the entered text into a whole number.
+- `range(1, 11)` produces numbers from 1 to 10.
+- The `for` loop repeats the print statement for each number.
+
+### Part E — Save and upload the first program
+In Git Bash, enter these commands one at a time:
+
+```bash
+git add program1.py
+git commit -m "Add multiplication table program"
+git branch -M main
+```
+
+**Meaning:**
+- `git add` selects the file for saving.
+- `git commit` saves a snapshot of the selected file.
+- `git branch -M main` names the current branch `main`.
+
+Connect the local folder to your GitHub repository. Replace `YOUR-USERNAME` with your GitHub username:
+
+```bash
+git remote add origin https://github.com/YOUR-USERNAME/MyTech.git
+git push -u origin main
+```
+
+If GitHub asks you to sign in or authorize access, follow the instructions. Refresh your GitHub repository page. You should see `program1.py`.
+
+**Note:** If Git says `origin` already exists, do not repeat the `git remote add origin` command.
+
+### Part F — Create a branch and the second program
+In Git Bash, type:
+
+```bash
+git checkout -b GIT-EXAM
+```
+
+This creates a branch named `GIT-EXAM` and switches to it.
+
+Create the second program:
+
+```bash
+notepad program2.py
+```
+
+Copy this code into Notepad:
+
+```python
+a = int(input("Enter first number: "))
+b = int(input("Enter second number: "))
+
+if a > b:
+    print("First number is greater")
+elif b > a:
+    print("Second number is greater")
+else:
+    print("Both numbers are equal")
+```
+
+Save the file and close Notepad.
+
+Run the program:
+
+```bash
+python program2.py
+```
+
+Try entering `8` and `3`. The program should display:
+
+```text
+First number is greater
+```
+
+Save and upload the second program:
+
+```bash
+git add program2.py
+git commit -m "Add greatest of two numbers program"
+git push -u origin GIT-EXAM
+```
+
+### Part G — Demonstrate the difference between branches
+Type:
+
+```bash
+git checkout main
+ls
+```
+
+Expected files:
+
+```text
+program1.py
+```
+
+Now type:
+
+```bash
+git checkout GIT-EXAM
+ls
+```
+
+Expected files:
+
+```text
+program1.py
+program2.py
+```
+
+**Result:** The second program exists in the `GIT-EXAM` branch but not in the `main` branch.
+
+## Viva Questions and Answers
+
+**Q1. What is Git?**  
+Git is a tool that tracks changes in project files.
+
+**Q2. What is GitHub?**  
+GitHub is a website where we can store and share Git projects online.
+
+**Q3. What is a repository?**  
+A project folder whose changes Git tracks.
+
+**Q4. What does `git init` do?**  
+It starts a new Git repository in the current folder.
+
+**Q5. What is the difference between `git add` and `git commit`?**  
+`git add` selects changes; `git commit` saves them.
+
+**Q6. What does `git push` do?**  
+It uploads committed changes to GitHub.
+
+**Q7. What is a branch?**  
+A separate version of a project where we can make changes.
+
+**Q8. Why did we create the `GIT-EXAM` branch?**  
+To add the second program separately from `main`.
+
+**Q9. What does `git checkout` do?**  
+It switches to another branch.
+
+**Q10. What does `git checkout -b GIT-EXAM` do?**  
+It creates the `GIT-EXAM` branch and switches to it.
+
+**Q11. What does `range(1, 11)` mean in Python?**  
+It gives numbers 1 through 10. The number 11 is not included.
+
+**Q12. Why do we use `int(input())`?**  
+`input()` receives text, and `int()` converts it into a whole number.
+
+**Q13. What is a commit?**  
+A saved snapshot of the project’s changes.
+
+**Q14. What is the `main` branch?**  
+The main version of the project.
+
+**Q15. What does `ls` do in Git Bash?**  
+It lists the files and folders in the current folder.
+
+**Q16. What is the difference between a local and remote repository?**  
+The local repository is on our computer; the remote repository is online, such as on GitHub.
+
+**Q17. What does `git remote add origin` do?**  
+It connects our local repository to the GitHub repository.
+
+**Q18. Why do we use `git push -u origin main`?**  
+It uploads the `main` branch and sets its remote branch connection for future pushes.
+
+**Q19. What does `mkdir` do?**  
+It creates a new folder.
+
+**Q20. What does `cd` do?**  
+It changes the current folder in the terminal.
+
+**Q21. What is the purpose of the `for` loop in the first program?**  
+It repeats the multiplication-table statement for numbers 1 through 10.
+
+**Q22. What does the `%` operator do?**  
+It gives the remainder after division.
+
+**Q23. What is the purpose of `if`, `elif`, and `else` in the second program?**  
+They check which number is greater, or whether both numbers are equal.
+
+**Q24. What is the difference between `git checkout main` and `git checkout GIT-EXAM`?**  
+They switch to the `main` branch and the `GIT-EXAM` branch, respectively.
+
+**Q25. What is the result of this practical?**  
+We created a repository, uploaded a Python program, created a branch, added another program, and demonstrated the difference between the branches.
+
+## Quick Revision
+- `git add` — select changes
+- `git commit` — save changes
+- `git push` — upload changes
+- `git checkout` — switch branches
+- `git checkout -b` — create and switch to a new branch
+
+
+
+
+# PRACTICAL 2 — Even/Odd, Reverse String, and Pull Request
+
+## Aim
+Create a GitHub repository, write an even/odd program, create a branch with a string-reversal program, and create a pull request.
+
+## Tools Required
+- Git Bash
+- Python
+- GitHub account
+- Notepad
+
+## Procedure
+
+### Part A — Create a repository on GitHub
+1. Open [https://github.com](https://github.com) and sign in.
+2. Click **+ → New repository**.
+3. Enter the repository name: `Practical2`.
+4. Select **Public**.
+5. Click **Create repository**.
+6. Keep the repository page open. Note your GitHub username.
+
+### Part B — Create a project folder
+1. Open **Git Bash** from the Windows Start menu.
+2. Type these commands one at a time, pressing **Enter** after each:
+
+```bash
+mkdir Practical2
+cd Practical2
+git init
+```
+
+**Meaning:**
+- `mkdir Practical2` creates a folder named `Practical2`.
+- `cd Practical2` moves into that folder.
+- `git init` starts a Git repository in the folder.
+
+### Part C — Create the even/odd program
+1. In Git Bash, type:
+
+```bash
+notepad program1.py
+```
+
+2. If Notepad asks whether to create the file, click **Yes**.
+3. Copy this code into Notepad:
+
+```python
+number = int(input("Enter a number: "))
+
+if number % 2 == 0:
+    print("Even number")
+else:
+    print("Odd number")
+```
+
+4. Click **File → Save**, then close Notepad.
+5. In Git Bash, run:
+
+```bash
+python program1.py
+```
+
+6. Enter `8` when asked for a number.
+
+**Expected output:**
+
+```text
+Enter a number: 8
+Even number
+```
+
+Try again with `7`. It should display `Odd number`.
+
+**Code explanation:**
+- `input()` asks you to enter a number.
+- `int()` converts the entered text into a whole number.
+- `% 2` checks the remainder after division by 2.
+- If the remainder is `0`, the number is even. Otherwise, it is odd.
+
+### Part D — Save and upload the first program
+In Git Bash, type these commands one at a time:
+
+```bash
+git add program1.py
+git commit -m "Add even odd program"
+git branch -M main
+```
+
+**Meaning:**
+- `git add` selects the file for saving.
+- `git commit` saves a snapshot of the selected file.
+- `git branch -M main` names the current branch `main`.
+
+Replace `YOUR-USERNAME` with your GitHub username, then type:
+
+```bash
+git remote add origin https://github.com/YOUR-USERNAME/Practical2.git
+git push -u origin main
+```
+
+If GitHub asks you to sign in or authorize access, follow its instructions. Refresh the repository page. You should see `program1.py`.
+
+**Note:** If Git says `origin` already exists, do not repeat the `git remote add origin` command.
+
+### Part E — Create a branch and the reverse-string program
+In Git Bash, type:
+
+```bash
+git checkout -b GIT-EXAM
+```
+
+This creates a branch named `GIT-EXAM` and switches to it.
+
+Create the second program:
+
+```bash
+notepad program2.py
+```
+
+Copy this code into Notepad:
+
+```python
+text = input("Enter a string: ")
+print("Reversed string:", text[::-1])
+```
+
+Save the file and close Notepad.
+
+Run the program:
+
+```bash
+python program2.py
+```
+
+Enter `hello`.
+
+**Expected output:**
+
+```text
+Enter a string: hello
+Reversed string: olleh
+```
+
+**Code explanation:** `text[::-1]` takes the text in reverse order.
+
+### Part F — Save and upload the second program
+In Git Bash, type these commands one at a time:
+
+```bash
+git add program2.py
+git commit -m "Add string reverse program"
+git push -u origin GIT-EXAM
+```
+
+The second program is now uploaded on the `GIT-EXAM` branch.
+
+### Part G — Create a pull request on GitHub
+1. Open your `Practical2` repository on GitHub.
+2. Click **Compare & pull request** if it appears.
+   - If it does not appear, click **Pull requests → New pull request**.
+3. Set the **base** branch to `main`.
+4. Set the **compare** branch to `GIT-EXAM`.
+5. Click **Create pull request**.
+
+A pull request asks for changes to be reviewed and merged into another branch. Creating one does not automatically merge the code.
+
+## Viva Questions and Answers
+
+**Q1. What is an even number?**  
+A number that leaves remainder 0 when divided by 2.
+
+**Q2. What is an odd number?**  
+A number that leaves remainder 1 when divided by 2.
+
+**Q3. What does the `%` operator do?**  
+It gives the remainder after division.
+
+**Q4. Why do we use `if` and `else`?**  
+To check a condition and choose which statement to run.
+
+**Q5. What is a string?**  
+Text, such as a name or sentence.
+
+**Q6. What does `text[::-1]` do?**  
+It reverses the string.
+
+**Q7. What is a branch?**  
+A separate version of a project where we can make changes.
+
+**Q8. What is a pull request?**  
+A request to review and merge changes from one branch into another.
+
+**Q9. What is the base branch?**  
+The branch that will receive the changes.
+
+**Q10. Does creating a pull request automatically merge the code?**  
+No. The pull request must be reviewed and merged separately.
+
+**Q11. What does `git push` do?**  
+It uploads committed changes to GitHub.
+
+**Q12. What is the difference between `git add` and `git commit`?**  
+`git add` selects changes; `git commit` saves them.
+
+**Q13. What does `git checkout -b GIT-EXAM` do?**  
+It creates the branch and switches to it.
+
+**Q14. What is the result of this practical?**  
+We created an even/odd program, added a reverse-string program on a separate branch, uploaded both to GitHub, and created a pull request.
+
+## Quick Revision
+- `git add` — select changes
+- `git commit` — save changes
+- `git push` — upload changes
+- `git checkout` — switch branches
+- `git checkout -b` — create and switch to a new branch
+
+
+
+# Practical 3: Git Branching and Merge Conflict
+
+## Aim
+To create branches in Git, make changes in different branches, and resolve a merge conflict.
+
+## Software Required
+- Git Bash
+- GitHub account
+- Notepad
+
+## Part A: Create the GitHub Repository
+
+1. Open **GitHub** in your browser and sign in.
+2. Click **New repository**.
+3. Enter the repository name: `Practical3`
+4. Select **Public** or **Private**.
+5. Click **Create repository**.
+6. Copy the repository URL.
+
+## Part B: Create a Local Project
+
+1. Open **Git Bash**.
+2. Go to the Desktop:
+
+```bash
+cd Desktop
+```
+
+3. Create and open the project folder:
+
+```bash
+mkdir Practical3
+cd Practical3
+```
+
+4. Connect the folder to GitHub. Replace the example URL with your repository URL:
+
+```bash
+git clone YOUR_REPOSITORY_URL .
+```
+
+5. Create a file named `program.txt`:
+
+```bash
+notepad program.txt
+```
+
+6. Type and save:
+
+```text
+This is the original line.
+```
+
+7. Add and commit the file:
+
+```bash
+git add program.txt
+git commit -m "Add original file"
+git push origin main
+```
+
+## Part C: Create Two Branches
+
+1. Create the first branch and switch to it:
+
+```bash
+git checkout -b branch1
+```
+
+2. Open the file:
+
+```bash
+notepad program.txt
+```
+
+3. Replace the text with:
+
+```text
+This line was changed in branch1.
+```
+
+4. Save the file, then commit the change:
+
+```bash
+git add program.txt
+git commit -m "Change file in branch1"
+```
+
+5. Return to the main branch:
+
+```bash
+git checkout main
+```
+
+6. Create the second branch:
+
+```bash
+git checkout -b branch2
+```
+
+7. Open the same file:
+
+```bash
+notepad program.txt
+```
+
+8. Replace the text with:
+
+```text
+This line was changed in branch2.
+```
+
+9. Save and commit:
+
+```bash
+git add program.txt
+git commit -m "Change file in branch2"
+```
+
+## Part D: Create and Resolve the Merge Conflict
+
+1. Switch back to `main`:
+
+```bash
+git checkout main
+```
+
+2. Merge the first branch:
+
+```bash
+git merge branch1
+```
+
+3. Now merge the second branch:
+
+```bash
+git merge branch2
+```
+
+Git should report a **merge conflict** because both branches changed the same line in `program.txt`.
+
+4. Open the file:
+
+```bash
+notepad program.txt
+```
+
+5. The file will contain conflict markers similar to these:
+
+```text
+<<<<<<< HEAD
+This line was changed in branch1.
+=======
+This line was changed in branch2.
+>>>>>>> branch2
+```
+
+6. Edit the file to keep the final line you want. For example:
+
+```text
+This line was changed and the conflict is resolved.
+```
+
+7. Save the file. Then run:
+
+```bash
+git add program.txt
+git commit -m "Resolve merge conflict"
+```
+
+8. Push the updated main branch to GitHub:
+
+```bash
+git push origin main
+```
+
+## Part E: Verify
+
+Run:
+
+```bash
+git branch
+```
+
+The branch names should appear. The `*` shows the branch you are currently using.
+
+Open the repository on GitHub and check that `program.txt` contains the final resolved line.
+
+## Result
+Branches were created, changes were made in separate branches, and the merge conflict was resolved successfully.
+
+## Viva Questions and Answers
+
+1. **What is Git?**  
+   Git is a tool used to track changes in files.
+
+2. **What is GitHub?**  
+   GitHub is an online platform for storing and sharing Git repositories.
+
+3. **What is a branch?**  
+   A branch is a separate line of work in a Git project.
+
+4. **Why do we use branches?**  
+   To work on changes separately without directly changing the main branch.
+
+5. **What is merging?**  
+   Merging combines changes from one branch into another.
+
+6. **What is a merge conflict?**  
+   A merge conflict happens when Git cannot automatically combine changes.
+
+7. **Why did the conflict happen in this practical?**  
+   Both branches changed the same line in the same file.
+
+8. **What are conflict markers?**  
+   They show the different versions of the conflicting text.
+
+9. **What does `git add` do?**  
+   It stages the changes for a commit.
+
+10. **What does `git commit` do?**  
+    It saves a snapshot of the staged changes.
+
+11. **What does `git push` do?**  
+    It uploads local commits to the remote repository.
+
+12. **What does `git checkout` do?**  
+    It switches to another branch.
+
+13. **What does `git branch` show?**  
+    It lists the branches in the repository.
+
+14. **What is the purpose of the `main` branch?**  
+    It is commonly used as the primary branch of a project.
+
+15. **How do you resolve a merge conflict?**  
+    Edit the file to choose the correct final content, save it, stage it, and commit it.
+
+
+
+
+# Practical 4: Using `.gitignore`
+
+## Aim
+To use a `.gitignore` file to prevent a folder from being tracked by Git.
+
+## Software Required
+- Git Bash
+- GitHub account
+- Notepad
+
+## Part A: Create a GitHub Repository
+
+1. Open GitHub and sign in.
+2. Create a new repository named `Practical4`.
+3. Copy the repository URL.
+
+## Part B: Create the Local Project
+
+1. Open **Git Bash**.
+2. Go to the Desktop:
+
+```bash
+cd Desktop
+```
+
+3. Create and open the project folder:
+
+```bash
+mkdir Practical4
+cd Practical4
+```
+
+4. Start Git in this folder:
+
+```bash
+git init
+```
+
+5. Create two Python files:
+
+```bash
+notepad program1.py
+```
+
+Type this and save:
+
+```python
+print("This is program 1")
+```
+
+Then create the second file:
+
+```bash
+notepad program2.py
+```
+
+Type this and save:
+
+```python
+print("This is program 2")
+```
+
+## Part C: Create the Folder to Ignore
+
+1. Create a folder named `IGNORE`:
+
+```bash
+mkdir IGNORE
+```
+
+2. Create a test file inside it:
+
+```bash
+notepad IGNORE/test.txt
+```
+
+Type:
+
+```text
+This file should not be tracked by Git.
+```
+
+Save and close Notepad.
+
+3. Create the `.gitignore` file:
+
+```bash
+notepad .gitignore
+```
+
+4. Type this inside `.gitignore`:
+
+```text
+IGNORE/
+```
+
+Save and close Notepad.
+
+This tells Git to ignore the entire `IGNORE` folder.
+
+## Part D: Check and Commit the Files
+
+1. Check the Git status:
+
+```bash
+git status
+```
+
+You should see `program1.py`, `program2.py`, and `.gitignore` listed as untracked files. The `IGNORE` folder should **not** appear.
+
+2. Add the files that should be tracked:
+
+```bash
+git add program1.py program2.py .gitignore
+```
+
+3. Commit them:
+
+```bash
+git commit -m "Add programs and gitignore"
+```
+
+## Part E: Connect to GitHub and Push
+
+1. Add your GitHub repository as the remote. Replace the example URL with your repository URL:
+
+```bash
+git remote add origin YOUR_REPOSITORY_URL
+```
+
+2. Rename the branch to `main`:
+
+```bash
+git branch -M main
+```
+
+3. Push the files to GitHub:
+
+```bash
+git push -u origin main
+```
+
+4. Open your repository on GitHub. Confirm that `program1.py`, `program2.py`, and `.gitignore` are present. The `IGNORE` folder should not be uploaded.
+
+## Result
+The `.gitignore` file was created and used to prevent the `IGNORE` folder from being tracked by Git.
+
+## Viva Questions and Answers
+
+1. **What is `.gitignore`?**  
+   A file that tells Git which files or folders to ignore.
+
+2. **Why do we use `.gitignore`?**  
+   To prevent unwanted files from being tracked or uploaded.
+
+3. **What does `IGNORE/` mean in `.gitignore`?**  
+   It tells Git to ignore the folder named `IGNORE`.
+
+4. **What is an untracked file?**  
+   A file Git knows exists but is not tracking yet.
+
+5. **Will Git upload an ignored folder when we push?**  
+   No. Git does not track ignored files, so they are not included in the push.
+
+6. **Can `.gitignore` ignore a particular file extension?**  
+   Yes. For example, `*.log` ignores files ending in `.log`.
+
+7. **Can we ignore one file but keep another file of the same type?**  
+   Yes. A rule such as `*.txt` ignores text files, and `!important.txt` can exclude `important.txt` from that rule.
+
+8. **Does `.gitignore` stop tracking a file that Git already tracks?**  
+   No. It mainly applies to files that are not already tracked.
+
+9. **What does `git rm --cached filename` do?**  
+   It removes a file from Git tracking but keeps the file on the computer.
+
+10. **What does `git status` show?**  
+    It shows the current state of tracked, modified, and untracked files.
+
+
+
+
+# Practical 5: Using GitHub Desktop
+
+## Aim
+To create a repository, create a branch, make changes, and save them using GitHub Desktop.
+
+## Software Required
+- GitHub account
+- GitHub Desktop
+- Notepad
+
+## Part A: Sign In and Create a Repository
+
+1. Open **GitHub Desktop**.
+2. Sign in to your GitHub account.
+3. Click **File → New repository**.
+4. Enter the repository name: `Practical5`.
+5. Choose a local folder where you want to save it.
+6. Click **Create repository**.
+
+## Part B: Add a File and Commit
+
+1. Open the repository folder on your computer.
+2. Create a file named `README.md`.
+3. Open it in Notepad and type:
+
+```text
+# My Practical 5
+This repository was created using GitHub Desktop.
+```
+
+4. Save and close the file.
+5. Return to GitHub Desktop. The file should appear under **Changes**.
+6. In the **Summary** box, type:
+
+```text
+Add README file
+```
+
+7. Click **Commit to main**.
+
+## Part C: Publish the Repository
+
+1. Click **Publish repository**.
+2. Confirm the repository name.
+3. Choose whether the repository should be public or private.
+4. Click **Publish repository** again.
+5. The repository is now uploaded to GitHub.
+
+## Part D: Create a Branch and Make a Change
+
+1. In GitHub Desktop, click **Current Branch**.
+2. Click **New Branch**.
+3. Enter the branch name: `GIT-EXAM`.
+4. Click **Create Branch**.
+5. Open `README.md` in Notepad.
+6. Add this line:
+
+```text
+This change was made in the GIT-EXAM branch.
+```
+
+7. Save and close the file.
+8. Return to GitHub Desktop.
+9. In the **Summary** box, type:
+
+```text
+Update README in GIT-EXAM branch
+```
+
+10. Click **Commit to GIT-EXAM**.
+11. Click **Push origin** to upload the branch and its commit to GitHub.
+
+## Part E: Verify
+
+1. Open the repository on GitHub in your browser.
+2. Use the branch selector to choose `GIT-EXAM`.
+3. Open `README.md` and check that the new line is present.
+
+## Result
+A repository was created and published using GitHub Desktop. A branch was created, a change was committed, and the branch was pushed to GitHub.
+
+## Viva Questions and Answers
+
+1. **What is GitHub Desktop?**  
+   It is an application that lets us use Git through a graphical interface instead of typing commands.
+
+2. **What is a repository?**  
+   A repository is a place where a project's files and their change history are stored.
+
+3. **What is a local repository?**  
+   A repository saved on our computer.
+
+4. **What is a remote repository?**  
+   A repository stored online, such as on GitHub.
+
+5. **What is a commit?**  
+   A saved record of changes in the repository.
+
+6. **What does “Publish repository” do?**  
+   It uploads the local repository to GitHub and creates its remote copy.
+
+7. **What does “Push origin” do?**  
+   It uploads local commits to the remote repository.
+
+8. **What does “Pull origin” do?**  
+   It downloads changes from the remote repository to the local repository.
+
+9. **What is a branch?**  
+   A separate line of work in a repository.
+
+10. **Why did we create the `GIT-EXAM` branch?**  
+    To make and save changes separately from the main branch.
+
+11. **What is a README file?**  
+    A file that describes the project or repository.
+
+12. **What is the Summary box used for?**  
+    It is used to write a short message describing the commit.
+
+13. **Can we use GitHub Desktop without Git Bash?**  
+    Yes. GitHub Desktop provides buttons and menus for common Git operations.
+
+14. **What is the difference between commit and push?**  
+    A commit saves changes locally; a push uploads those commits to GitHub.
+
+
+
+# Practical 6: Forking a Repository and Creating a Pull Request
+
+## Aim
+To clone a GitHub repository, demonstrate that branches cannot be created in the original repository, fork it, create a feature branch, make changes, and submit a pull request.
+
+## Software Required
+- Git Bash
+- GitHub account
+- Web browser
+- Notepad
+
+## Part A: Clone the Original Repository
+
+1. Open **Git Bash**.
+2. Go to the Desktop:
+
+```bash
+cd Desktop
+```
+
+3. Clone the given repository:
+
+```bash
+git clone https://github.com/KalyanM45/AI-Project-Gallery.git
+```
+
+4. Enter the downloaded folder:
+
+```bash
+cd AI-Project-Gallery
+```
+
+## Part B: Demonstrate That Branch Creation Is Disallowed
+
+1. Try to create a branch in the original repository:
+
+```bash
+git checkout -b GIT-EXAM
+```
+
+2. Git may allow you to create a **local** branch, because creating a branch on your computer does not require permission from GitHub. However, you do not have permission to push that branch to the original repository.
+
+3. To demonstrate the restriction, try:
+
+```bash
+git push -u origin GIT-EXAM
+```
+
+4. GitHub should reject the push because you do not have write permission to the original repository.
+
+**Note:** If the branch was created locally, that is normal. The restriction is on pushing changes to the original repository.
+
+## Part C: Fork the Repository
+
+1. Open this repository in your browser:
+
+   https://github.com/KalyanM45/AI-Project-Gallery
+
+2. Sign in to GitHub.
+3. Click **Fork** near the top-right of the repository page.
+4. Select your GitHub account as the owner.
+5. Click **Create fork**.
+
+A fork is your own copy of another person’s repository.
+
+## Part D: Clone Your Fork
+
+1. Open your fork on GitHub.
+2. Click **Code** and copy the HTTPS URL.
+3. Return to Git Bash. Go back to the Desktop:
+
+```bash
+cd ..
+```
+
+4. Clone your fork. Replace the example URL with the URL you copied:
+
+```bash
+git clone YOUR_FORK_URL
+```
+
+5. Enter the cloned folder. The folder name will usually be `AI-Project-Gallery`:
+
+```bash
+cd AI-Project-Gallery
+```
+
+If Git Bash says the folder already exists, use a different folder name when cloning, or rename the first cloned folder before continuing.
+
+## Part E: Create the Feature Branch
+
+Create and switch to the feature branch:
+
+```bash
+git checkout -b GIT-EXAM
+```
+
+Check the current branch:
+
+```bash
+git branch
+```
+
+The `*` symbol should appear beside `GIT-EXAM`.
+
+## Part F: Make a Change and Push It
+
+1. Open the project folder in File Explorer.
+2. Choose a suitable existing file to edit, or add a new file for your practical work.
+3. Make a small change, then save the file.
+4. In Git Bash, check the changes:
+
+```bash
+git status
+```
+
+5. Stage the changed file:
+
+```bash
+git add .
+```
+
+6. Commit the change:
+
+```bash
+git commit -m "Add changes in GIT-EXAM branch"
+```
+
+7. Push your feature branch to your fork:
+
+```bash
+git push -u origin GIT-EXAM
+```
+
+## Part G: Submit a Pull Request
+
+1. Open your fork on GitHub.
+2. Click **Compare & pull request** if it appears. Otherwise, open **Pull requests → New pull request**.
+3. Set the **base repository** to `KalyanM45/AI-Project-Gallery` and the base branch to `main` (or the repository’s default branch).
+4. Set the **head repository** to your fork and the compare branch to `GIT-EXAM`.
+5. Enter a title and description of your changes.
+6. Click **Create pull request**.
+
+Your pull request asks the original project owner to review and consider your changes.
+
+## Part H: Handle Review Feedback or Merge Conflicts
+
+- If the reviewer requests changes, edit the same files on your `GIT-EXAM` branch.
+- Save, stage, commit, and push the updates:
+
+```bash
+git add .
+git commit -m "Address pull request feedback"
+git push
+```
+
+The pull request updates automatically.
+
+- If GitHub reports a merge conflict, open the conflicting file and resolve the marked sections. Then run:
+
+```bash
+git add .
+git commit -m "Resolve merge conflict"
+git push
+```
+
+**Important:** A merge conflict may not occur every time. If no conflict appears, explain that the repository’s changes could be merged automatically.
+
+## Result
+The original repository was cloned, the lack of permission to push to it was demonstrated, a fork was created, a feature branch was used to make changes, and a pull request was submitted for review.
+
+## Viva Questions and Answers
+
+1. **What is Git?**  
+   Git is a tool used to track changes in files.
+
+2. **What is GitHub?**  
+   GitHub is an online platform for hosting Git repositories.
+
+3. **What is cloning?**  
+   Cloning downloads a repository to your computer.
+
+4. **What is a fork?**  
+   A fork is your own copy of another user’s repository on GitHub.
+
+5. **Why do we fork a repository?**  
+   To work on our own copy when we do not have permission to change the original repository.
+
+6. **What is a branch?**  
+   A separate line of work in a repository.
+
+7. **What is a feature branch?**  
+   A branch used to develop a particular change or feature.
+
+8. **Why was the `GIT-EXAM` branch created?**  
+   To make changes separately from the main branch.
+
+9. **What is a pull request?**  
+   A request asking the repository owner to review and merge our changes.
+
+10. **Can we push directly to the original repository?**  
+    Only if we have write permission.
+
+11. **What is a merge conflict?**  
+    A situation where Git cannot automatically combine changes.
+
+12. **How do we resolve a merge conflict?**  
+    Edit the conflicting file, keep the correct content, save it, stage it, commit it, and push the changes.
+
+13. **What does `git push` do?**  
+    It uploads local commits to a remote repository.
+
+14. **What does `git status` do?**  
+    It shows the current state of files and changes in the repository.
+
+15. **What does `git checkout -b GIT-EXAM` do?**  
+    It creates the `GIT-EXAM` branch and switches to it.
+
+
+
+# Practical 7: Forking a Repository Using GitHub Desktop
+
+## Aim
+To clone a GitHub repository, demonstrate that we cannot push changes to the original repository, fork it, create a feature branch, make changes, and submit a pull request.
+
+## Software Required
+- GitHub Desktop
+- GitHub account
+- Web browser
+- Notepad
+
+## Part A: Clone the Original Repository
+
+1. Open **GitHub Desktop**.
+2. Click **File → Clone repository**.
+3. Select the **URL** tab.
+4. Enter this repository URL:
+
+```text
+https://github.com/KalyanM45/Spam-Email-Detection.git
+```
+
+5. Choose a local folder where you want to save it.
+6. Click **Clone**.
+
+## Part B: Demonstrate That You Cannot Push to the Original Repository
+
+1. In GitHub Desktop, select **Current Branch → New Branch**.
+2. Enter `GIT-EXAM` and click **Create Branch**.
+3. GitHub Desktop can create a local branch, but you do not have permission to push it to the original repository.
+4. To demonstrate the restriction, make a small change and commit it. Then click **Push origin**.
+5. The push should be rejected because you do not have write permission to the original repository.
+
+**Note:** Branch creation on your computer may be allowed. The restriction is on pushing changes to the original repository.
+
+## Part C: Fork the Repository
+
+1. Open the original repository in your browser:
+
+   https://github.com/KalyanM45/Spam-Email-Detection
+
+2. Sign in to GitHub.
+3. Click **Fork**.
+4. Select your GitHub account as the owner.
+5. Click **Create fork**.
+
+A fork is your own copy of another person’s repository.
+
+## Part D: Clone Your Fork
+
+1. Open your fork on GitHub.
+2. Click **Code** and copy its HTTPS URL.
+3. Return to GitHub Desktop.
+4. Click **File → Clone repository**.
+5. Select the **URL** tab and paste your fork’s URL.
+6. Choose a local folder and click **Clone**.
+7. If asked, open the cloned repository in GitHub Desktop.
+
+## Part E: Create the Feature Branch
+
+1. In GitHub Desktop, click **Current Branch → New Branch**.
+2. Enter `GIT-EXAM`.
+3. Click **Create Branch**.
+
+## Part F: Make and Commit a Change
+
+1. Open the repository folder on your computer.
+2. Edit a suitable existing file, or add a new file for your practical work.
+3. Save the change.
+4. Return to GitHub Desktop. The change should appear under **Changes**.
+5. Enter a short message in the **Summary** box, for example:
+
+```text
+Make changes in GIT-EXAM branch
+```
+
+6. Click **Commit to GIT-EXAM**.
+7. Click **Push origin** to upload the branch to your fork.
+
+## Part G: Submit a Pull Request
+
+1. Open your fork on GitHub.
+2. Click **Compare & pull request**, or open **Pull requests → New pull request**.
+3. Set the base repository to `KalyanM45/Spam-Email-Detection` and select its default branch.
+4. Set the compare repository to your fork and the compare branch to `GIT-EXAM`.
+5. Enter a title and description.
+6. Click **Create pull request**.
+
+## Part H: Handle Review Feedback or Merge Conflicts
+
+- If the reviewer requests changes, edit the files on your `GIT-EXAM` branch.
+- Save the changes, then return to GitHub Desktop.
+- Enter a commit message and click **Commit to GIT-EXAM**.
+- Click **Push origin**. The pull request updates automatically.
+
+If a merge conflict occurs, open the conflicting file and resolve the marked sections. Save the file, commit the resolution, and push the branch.
+
+**Note:** A merge conflict may not occur every time. If no conflict appears, the changes were able to merge automatically.
+
+## Result
+The repository was cloned, a fork was created, a feature branch was used to make changes, and a pull request was submitted for review.
+
+## Viva Questions and Answers
+
+1. **What is GitHub Desktop?**  
+   An application that lets us use Git through buttons and menus.
+
+2. **What is cloning?**  
+   Downloading a repository to our computer.
+
+3. **What is a fork?**  
+   Our own copy of another person’s repository on GitHub.
+
+4. **Why do we fork a repository?**  
+   To work on our own copy when we cannot directly change the original repository.
+
+5. **What is a branch?**  
+   A separate line of work in a repository.
+
+6. **What is a feature branch?**  
+   A branch used to develop a particular change or feature.
+
+7. **What is a pull request?**  
+   A request asking the repository owner to review and consider our changes.
+
+8. **Can we push directly to the original repository?**  
+   Only if we have write permission.
+
+9. **What is a commit?**  
+   A saved record of changes.
+
+10. **What does “Push origin” do?**  
+    It uploads local commits to the remote repository.
+
+11. **What is a merge conflict?**  
+    A situation where Git cannot automatically combine changes.
+
+12. **How do we resolve a merge conflict?**  
+    Edit the conflicting file, keep the correct content, save it, commit the resolution, and push the changes.
+
+
+
+
+
+
+# Practical 8: Continuous Integration Using Jenkins
+
+## Aim
+To create a GitHub repository, configure Jenkins to run a pipeline, and verify that a code change automatically triggers a build.
+
+## Software Required
+- Git
+- GitHub account
+- Jenkins
+- Java (required to run Jenkins)
+
+## Part A: Create a GitHub Repository
+
+1. Open GitHub and sign in.
+2. Create a new repository named `Jenkins-Practical`.
+3. Create a file named `Jenkinsfile` in the repository.
+4. Paste the following pipeline script into it:
+
+```groovy
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Build started successfully!'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Test stage completed!'
+            }
+        }
+    }
+}
+```
+
+5. Save the file and commit it to the repository.
+
+## Part B: Install and Launch Jenkins
+
+1. Install Java if it is not already installed.
+2. Download Jenkins from the official website:
+
+   https://www.jenkins.io/download/
+
+3. Choose the Windows installer and complete the installation.
+4. Open Jenkins from the Start menu.
+5. Open a browser and visit:
+
+   http://localhost:8080
+
+6. If Jenkins asks for an initial administrator password, follow the instructions shown on the screen to find it.
+7. Complete the setup wizard and create your administrator account.
+
+## Part C: Install Required Plugins
+
+1. In Jenkins, open **Manage Jenkins → Plugins**.
+2. Open the **Available plugins** section.
+3. Search for and select:
+   - Git
+   - GitHub
+   - Pipeline
+4. Click **Install** and wait for installation to finish.
+5. Restart Jenkins if it asks you to.
+
+*If a plugin is already installed, you do not need to install it again.*
+
+## Part D: Create a Pipeline Job
+
+1. From the Jenkins dashboard, click **New Item**.
+2. Enter the job name: `AI-Project-Pipeline`.
+3. Select **Pipeline**.
+4. Click **OK**.
+
+## Part E: Connect Jenkins to GitHub
+
+1. Open the job’s configuration page.
+2. Find the **Pipeline** section.
+3. For **Definition**, select **Pipeline script from SCM**.
+4. For **SCM**, select **Git**.
+5. Paste your GitHub repository URL into **Repository URL**.
+6. If the repository is public, credentials may not be required. For a private repository, add the required GitHub credentials.
+7. For **Script Path**, enter:
+
+```text
+Jenkinsfile
+```
+
+8. Click **Save**.
+
+## Part F: Configure the Build Trigger
+
+1. Open the job’s **Configure** page.
+2. Find **Build Triggers**.
+3. Select **Poll SCM**.
+4. Enter this schedule:
+
+```text
+H/5 * * * *
+```
+
+This tells Jenkins to check the repository about every five minutes for changes.
+
+5. Click **Save**.
+
+## Part G: Run and Verify the Pipeline
+
+1. Open the Jenkins job.
+2. Click **Build Now**.
+3. Click the new build number.
+4. Open **Console Output**.
+5. Confirm that the messages `Build started successfully!` and `Test stage completed!` appear and the build finishes successfully.
+
+## Part H: Test Automatic Triggering
+
+1. Open your GitHub repository.
+2. Edit `Jenkinsfile`, for example, change the build message.
+3. Commit the change to GitHub.
+4. Wait for Jenkins to poll the repository.
+5. Open the Jenkins job and check whether a new build starts.
+6. Open **Console Output** to verify the new build.
+
+**Note:** With Poll SCM, Jenkins checks for changes according to the schedule. A GitHub webhook can trigger builds sooner, but it requires webhook configuration and a Jenkins address that GitHub can reach.
+
+## Result
+A Jenkins pipeline was connected to a GitHub repository, executed successfully, and configured to check for repository changes automatically.
+
+## Viva Questions and Answers
+
+1. **What is Jenkins?**  
+   Jenkins is an automation tool used to build, test, and deploy software.
+
+2. **What is CI?**  
+   CI means Continuous Integration. It involves regularly combining code changes and checking them through automated builds and tests.
+
+3. **What is a Jenkins job?**  
+   A job is a task configured to run in Jenkins.
+
+4. **What is a Pipeline in Jenkins?**  
+   A pipeline defines the steps Jenkins should perform.
+
+5. **What is a Jenkinsfile?**  
+   A text file that contains the pipeline instructions.
+
+6. **What is SCM?**  
+   SCM means Source Code Management. It manages project files and their changes.
+
+7. **What does “Pipeline script from SCM” mean?**  
+   Jenkins gets the pipeline script from a source repository, such as GitHub.
+
+8. **What is a build trigger?**  
+   A setting that tells Jenkins when to start a job.
+
+9. **What is Poll SCM?**  
+   Jenkins checks the repository at scheduled times to see whether changes have been made.
+
+10. **What is a webhook?**  
+    A notification sent by GitHub to Jenkins when an event, such as a push, occurs.
+
+11. **What is Console Output?**  
+    It shows the messages and results produced during a build.
+
+12. **What does `agent any` mean in a Jenkinsfile?**  
+    Jenkins can run the pipeline on any available agent.
+
+13. **What is a stage?**  
+    A named section of a pipeline, such as Build or Test.
+
+14. **What does `echo` do in a pipeline?**  
+    It prints a message in the build log.
+
+15. **Why did we connect Jenkins to GitHub?**  
+    So Jenkins can get the project and run the pipeline when changes are detected.
+
+
+
+
+# Practical 9: Dockerizing an AI Application
+
+## Aim
+To create a Docker image for an AI application, run it in a container, and test the application.
+
+## Software Required
+- Docker Desktop
+- Python
+- Notepad or VS Code
+- Web browser
+
+## Part A: Create the Project Folder
+
+1. Open **File Explorer** and go to the Desktop.
+2. Create a folder named `DockerPractical`.
+3. Open the folder.
+4. Create a file named `app.py`.
+5. Open it in Notepad and paste:
+
+```python
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "AI application is running!"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+```
+
+6. Save the file.
+
+## Part B: Create `requirements.txt`
+
+1. In the same folder, create a file named `requirements.txt`.
+2. Type:
+
+```text
+flask
+```
+
+3. Save the file.
+
+## Part C: Create the Dockerfile
+
+1. In the same folder, create a file named `Dockerfile` (no file extension).
+2. Paste:
+
+```dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY app.py .
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
+```
+
+3. Save the file.
+
+## Part D: Build the Docker Image
+
+1. Open **Docker Desktop** and make sure it is running.
+2. Open **Git Bash**.
+3. Go to the project folder:
+
+```bash
+cd Desktop/DockerPractical
+```
+
+4. Build the image:
+
+```bash
+docker build -t ai-app .
+```
+
+Wait for the build to finish.
+
+## Part E: Run the Container
+
+Run:
+
+```bash
+docker run -d -p 5000:5000 --name ai-container ai-app
+```
+
+This starts the container in the background and connects your computer’s port 5000 to the container’s port 5000.
+
+## Part F: Verify and Test
+
+1. Check that the container is running:
+
+```bash
+docker ps
+```
+
+2. Open your browser and visit:
+
+```text
+http://localhost:5000
+```
+
+3. You should see:
+
+```text
+AI application is running!
+```
+
+## Part G: Stop the Container
+
+After testing, run:
+
+```bash
+docker stop ai-container
+```
+
+## Result
+A Docker image was built, a container was started, and the application was tested successfully through the browser.
+
+## Viva Questions and Answers
+
+1. **What is Docker?**  
+   Docker is a platform used to package and run applications in containers.
+
+2. **What is a container?**  
+   A container is an isolated environment in which an application runs.
+
+3. **What is a Docker image?**  
+   An image is a template used to create containers.
+
+4. **What is a Dockerfile?**  
+   A text file containing instructions to build a Docker image.
+
+5. **What is the purpose of `FROM`?**  
+   It specifies the base image.
+
+6. **What does `WORKDIR` do?**  
+   It sets the working directory inside the image.
+
+7. **What does `COPY` do?**  
+   It copies files from the project folder into the image.
+
+8. **What does `RUN` do?**  
+   It runs a command while building the image.
+
+9. **What does `EXPOSE 5000` mean?**  
+   It documents that the application uses port 5000 inside the container.
+
+10. **What does `docker build` do?**  
+    It builds an image from a Dockerfile.
+
+11. **What does `docker run` do?**  
+    It creates and starts a container from an image.
+
+12. **What does `docker ps` show?**  
+    It lists running containers.
+
+13. **What does `-p 5000:5000` mean?**  
+    It maps port 5000 on the computer to port 5000 in the container.
+
+14. **What does `docker stop` do?**  
+    It stops a running container.
+
+15. **Why do we use Docker?**  
+    It helps an application run in a consistent environment on different computers.
+
+
+
+
+
+
+# Practical 10: Docker Compose for a Web-Based AI Application
+
+## Aim
+To use Docker Compose to run a web application with separate containers for the frontend, AI model service, and database.
+
+## Software Required
+- Docker Desktop
+- Git Bash
+- Notepad or VS Code
+- Web browser
+
+## Part A: Create the Project Folder
+
+1. Go to your Desktop and create a folder named `DockerComposePractical`.
+2. Inside it, create these files and folders:
+
+```text
+DockerComposePractical
+│   docker-compose.yml
+│
+├── ai
+│   ├── app.py
+│   └── requirements.txt
+│
+└── frontend
+    └── index.html
+```
+
+## Part B: Create the AI Model Service
+
+1. Open the `ai` folder.
+2. Create `app.py` and paste:
+
+```python
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return jsonify({"message": "AI model service is running!"})
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+```
+
+3. Create `requirements.txt` in the same folder and type:
+
+```text
+flask
+```
+
+## Part C: Create the Frontend
+
+1. Open the `frontend` folder.
+2. Create `index.html` and paste:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Application</title>
+</head>
+<body>
+    <h1>AI Application</h1>
+    <p>Frontend container is running!</p>
+</body>
+</html>
+```
+
+3. Save the file.
+
+## Part D: Create the Docker Compose File
+
+1. In the main `DockerComposePractical` folder, create a file named `docker-compose.yml`.
+2. Paste:
+
+```yaml
+services:
+  ai-model:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - ./ai:/app
+    command: sh -c "pip install -r requirements.txt && python app.py"
+    ports:
+      - "5000:5000"
+    depends_on:
+      - database
+
+  database:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: aidb
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  frontend:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+
+volumes:
+  mysql-data:
+```
+
+**Simple explanation:**
+- `ai-model` runs the Flask service.
+- `database` runs MySQL.
+- `frontend` serves the webpage.
+- Docker Compose starts and manages all three containers together.
+
+## Part E: Start the Containers
+
+1. Open **Docker Desktop** and make sure it is running.
+2. Open **Git Bash**.
+3. Go to the project folder. For example:
+
+```bash
+cd Desktop/DockerComposePractical
+```
+
+4. Start all services:
+
+```bash
+docker compose up -d
+```
+
+Wait for the command to finish.
+
+## Part F: Verify and Test
+
+1. Check the running containers:
+
+```bash
+docker compose ps
+```
+
+You should see the `ai-model`, `database`, and `frontend` services.
+
+2. Open the frontend in your browser:
+
+```text
+http://localhost:8080
+```
+
+You should see **AI Application** and **Frontend container is running!**
+
+3. Test the AI service:
+
+```text
+http://localhost:5000
+```
+
+You should see a message saying that the AI model service is running.
+
+## Part G: Stop the Containers
+
+After testing, run:
+
+```bash
+docker compose down
+```
+
+This stops and removes the containers. The MySQL data volume remains saved.
+
+## Result
+Docker Compose was used to start and manage separate frontend, AI model, and database containers.
+
+## Viva Questions and Answers
+
+1. **What is Docker Compose?**  
+   A tool used to define and run multiple Docker containers together.
+
+
+
+
+
+What is Docker Compose?
+A tool used to define and run multiple Docker containers together.
+
+Why do we use Docker Compose?
+To manage multiple services using one configuration file and commands.
+
+What is a service in Docker Compose?
+A component of the application that runs in a container.
+
+What is docker-compose.yml?
+A file that describes the services and settings for the application.
+
+Which three services were used in this practical?
+Frontend, AI model service, and database.
+
+What is a frontend?
+The part of an application that users see and interact with.
+
+What is a database?
+A system used to store and manage data.
+
+What does docker compose up -d do?
+It starts the services in the background.
+
+What does docker compose ps do?
+It shows the status of the Compose services.
+
+What does docker compose down do?
+It stops and removes the containers created by Compose.
+
+What is a volume?
+A way to keep data even after a container is removed.
+
+What does depends_on do?
+It specifies that one service depends on another service.
+
+Why are different containers used for the frontend, AI model, and database?
+Each service can be managed and updated separately.
+
+What is port mapping?
+Connecting a port on the computer to a port inside a container.
+
+What is the advantage of Docker Compose?
+It makes starting and managing a multi-container application easier.
+
+
+
+
+
+# Practical 11: Deploying and Scaling an AI Application Using Minikube
+
+## Aim
+To set up a local Kubernetes cluster using Minikube, deploy a Dockerized AI application, scale it, and check its status.
+
+## Software Required
+- Docker Desktop
+- Minikube
+- kubectl
+- Git Bash
+- The Docker project from Practical 9
+
+## Part A: Start the Local Kubernetes Cluster
+
+1. Start **Docker Desktop** and wait until it is running.
+2. Open **Git Bash**.
+3. Check that Minikube is installed:
+
+```bash
+minikube version
+```
+
+4. Start the cluster:
+
+```bash
+minikube start --driver=docker
+```
+
+5. Check that the cluster is running:
+
+```bash
+kubectl get nodes
+```
+
+The node should show a status of `Ready`.
+
+## Part B: Build the Docker Image for Minikube
+
+1. Open Git Bash and go to the project folder from Practical 9. For example:
+
+```bash
+cd Desktop/DockerPractical
+```
+
+2. Build the image directly for Minikube:
+
+```bash
+minikube image build -t ai-app:latest .
+```
+
+This builds the image using the `Dockerfile` in the current folder.
+
+## Part C: Create a Kubernetes Deployment
+
+1. In the `DockerPractical` folder, create a file named `deployment.yaml`.
+2. Paste this configuration:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-app
+  template:
+    metadata:
+      labels:
+        app: ai-app
+    spec:
+      containers:
+        - name: ai-app
+          image: ai-app:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+```
+
+3. Save the file.
+
+## Part D: Deploy the Application
+
+Run this command from the folder containing `deployment.yaml`:
+
+```bash
+kubectl apply -f deployment.yaml
+```
+
+Check the deployment:
+
+```bash
+kubectl get deployments
+```
+
+Check the pod:
+
+```bash
+kubectl get pods
+```
+
+Wait until the pod status becomes `Running`.
+
+## Part E: Expose the Application
+
+1. Create a file named `service.yaml` in the same folder.
+2. Paste:
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-app-service
+spec:
+  type: NodePort
+  selector:
+    app: ai-app
+  ports:
+    - port: 5000
+      targetPort: 5000
+```
+
+3. Save the file.
+4. Apply the service:
+
+```bash
+kubectl apply -f service.yaml
+```
+
+5. Open the application in your browser:
+
+```bash
+minikube service ai-app-service
+```
+
+The browser should open the AI application. If it does not, use the URL printed in Git Bash.
+
+## Part F: Scale the Application
+
+1. Increase the number of running copies to three:
+
+```bash
+kubectl scale deployment ai-app --replicas=3
+```
+
+2. Check the pods:
+
+```bash
+kubectl get pods
+```
+
+You should see three pods for the application.
+
+## Part G: Check and Stop the Application
+
+Check the deployment and service:
+
+```bash
+kubectl get deployments
+kubectl get services
+```
+
+When finished, delete the application resources:
+
+```bash
+kubectl delete -f service.yaml
+kubectl delete -f deployment.yaml
+```
+
+Stop Minikube:
+
+```bash
+minikube stop
+```
+
+## Result
+A local Kubernetes cluster was started using Minikube. The Dockerized AI application was deployed, exposed through a service, and scaled to three replicas.
+
+## Viva Questions and Answers
+
+1. **What is Kubernetes?**  
+   Kubernetes is a system used to deploy and manage containerized applications.
+
+2. **What is Minikube?**  
+   Minikube runs a small Kubernetes cluster on a local computer.
+
+3. **What is a cluster?**  
+   A group of machines that work together to run applications.
+
+4. **What is a node?**  
+   A machine in a Kubernetes cluster.
+
+5. **What is a pod?**  
+   The smallest deployable unit in Kubernetes. It runs one or more containers.
+
+6. **What is a Deployment?**  
+   A Kubernetes resource that manages application pods.
+
+7. **What is a replica?**  
+   A copy of an application pod.
+
+8. **What does scaling mean?**  
+   Increasing or decreasing the number of running application copies.
+
+9. **What does `kubectl` do?**  
+   It is a command-line tool used to manage Kubernetes.
+
+10. **What does `kubectl apply -f` do?**  
+    It creates or updates resources using a configuration file.
+
+11. **What is a Service in Kubernetes?**  
+    A resource that provides a stable way to access application pods.
+
+12. **What does `kubectl get pods` show?**  
+    It lists the pods and their current status.
+
+13. **What does `kubectl scale` do?**  
+    It changes the number of replicas for a deployment.
+
+14. **Why do we use Kubernetes with Docker?**  
+    Docker packages the application into a container, and Kubernetes helps deploy and manage it.
+
+15. **What is the purpose of Minikube in this practical?**  
+    It provides a local Kubernetes cluster for practice and testing.
