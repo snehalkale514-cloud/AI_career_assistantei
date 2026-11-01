@@ -1,0 +1,259 @@
+
+# Practical 12: CI/CD Pipeline Using Jenkins, Docker, and Kubernetes
+
+## Aim
+To create a CI/CD pipeline using Jenkins, Docker, and Kubernetes to automate the development and deployment of an AI model application.
+
+## Simple meaning
+- **CI (Continuous Integration):** Automatically checks and builds the application when code changes.
+- **CD (Continuous Deployment):** Automatically deploys the application after a successful build.
+- **Docker:** Packs the application and its dependencies into an image.
+- **Kubernetes:** Runs and manages the application containers.
+- **Jenkins:** Automates the complete process.
+
+## Requirements
+- Jenkins installed and running
+- Docker installed
+- Kubernetes cluster available, such as Minikube
+- GitHub repository containing the application
+- Docker Hub account
+- Jenkins configured with access to Docker and Kubernetes
+
+> For this practical, the AI model application can be a simple sample app. The pipeline demonstrates deployment automation; it does not train a real AI model.
+
+## Procedure
+
+### Step 1: Create a project folder
+Create a folder named `ai-model-app` and place your application files inside it.
+
+Example files:
+- `app.py` — application code
+- `requirements.txt` — required Python libraries
+- `Dockerfile` — instructions to create the Docker image
+- `Jenkinsfile` — pipeline steps
+
+### Step 2: Create a Dockerfile
+Create a file named `Dockerfile` in the project folder:
+
+```dockerfile
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+EXPOSE 5000
+CMD ["python", "app.py"]
+```
+
+This file tells Docker how to package the application.
+
+### Step 3: Upload the project to GitHub
+1. Create a repository on GitHub.
+2. Upload the project files.
+3. Copy the repository URL.
+
+### Step 4: Configure Jenkins
+1. Open Jenkins in your browser.
+2. Select **New Item** and create a **Pipeline** job.
+3. Under **Pipeline**, select **Pipeline script from SCM**.
+4. Choose **Git** and paste the GitHub repository URL.
+5. Set the script path to `Jenkinsfile`.
+6. Save the job.
+
+### Step 5: Add the pipeline script
+Create a file named `Jenkinsfile` in the project folder:
+
+```groovy
+pipeline {
+    agent any
+
+    stages {
+        stage('Get Code') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t YOUR_DOCKERHUB_USERNAME/ai-model-app:latest .'
+            }
+        }
+
+        stage('Push Image') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-login',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+                    sh 'docker push YOUR_DOCKERHUB_USERNAME/ai-model-app:latest'
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh 'kubectl apply -f deployment.yaml'
+            }
+        }
+    }
+}
+```
+
+Replace `YOUR_DOCKERHUB_USERNAME` with your Docker Hub username.
+
+**Note:** Create a Jenkins credential with ID `dockerhub-login`. Jenkins must also have Docker and Kubernetes access configured.
+
+### Step 6: Create the Kubernetes deployment file
+Create `deployment.yaml`:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-model-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-model-app
+  template:
+    metadata:
+      labels:
+        app: ai-model-app
+    spec:
+      containers:
+        - name: ai-model-app
+          image: YOUR_DOCKERHUB_USERNAME/ai-model-app:latest
+          ports:
+            - containerPort: 5000
+```
+
+Replace the Docker Hub username here too.
+
+### Step 7: Run the pipeline
+1. Commit and push the `Jenkinsfile` and `deployment.yaml` to GitHub.
+2. Open the Jenkins pipeline job.
+3. Click **Build Now**.
+4. Check the stages in the Jenkins console output.
+
+### Step 8: Verify deployment
+Run:
+
+```bash
+kubectl get deployments
+kubectl get pods
+```
+
+The deployment and pod should appear. If the application has a Kubernetes Service, you can also use it to access the application.
+
+## Expected Result
+The CI/CD pipeline successfully gets the code from GitHub, builds a Docker image, pushes it to Docker Hub, and deploys the application to Kubernetes.
+
+## Viva Questions and Answers
+
+**1. What is CI/CD?**  
+CI/CD is a process that automates building, testing, and deploying software.
+
+**2. What is Jenkins?**  
+Jenkins is a tool used to automate software tasks such as building and deploying applications.
+
+**3. What is Docker?**  
+Docker packages an application and its required files into a container image.
+
+**4. What is Kubernetes?**  
+Kubernetes manages and runs containers across a cluster.
+
+**5. What is a Docker image?**  
+A Docker image is a package used to create containers.
+
+**6. What is a Jenkinsfile?**  
+A Jenkinsfile contains the steps of a Jenkins pipeline.
+
+**7. What is a Kubernetes Deployment?**  
+A Deployment manages application Pods and helps keep the required number running.
+
+**8. Why do we use Docker Hub?**  
+Docker Hub stores and shares Docker images.
+
+**9. What happens when a pipeline fails?**  
+The pipeline stops at the failed stage, and the error can be checked in the Jenkins console output.
+
+**10. What is the main benefit of CI/CD?**  
+It reduces manual work and makes application deployment faster and more consistent.
+11. What is a pipeline in Jenkins?
+A pipeline is a set of steps that Jenkins runs automatically.
+
+12. What are the stages in this pipeline?
+Get Code, Build Docker Image, Push Image, and Deploy to Kubernetes.
+
+13. What is the purpose of the Dockerfile?
+It contains instructions for building a Docker image.
+
+14. What does docker build do?
+It creates a Docker image from a Dockerfile.
+
+15. What does docker push do?
+It uploads a Docker image to a registry such as Docker Hub.
+
+16. What is a container?
+A container is a running instance of a Docker image.
+
+17. What is Docker Hub?
+Docker Hub is an online place to store and share Docker images.
+
+18. What is a Kubernetes Pod?
+A Pod is the smallest unit Kubernetes runs. It contains one or more containers.
+
+19. What is a Kubernetes cluster?
+A cluster is a group of machines managed by Kubernetes.
+
+20. What does kubectl do?
+It is a command-line tool used to communicate with Kubernetes.
+
+21. What does kubectl apply -f deployment.yaml do?
+It creates or updates Kubernetes resources using the YAML file.
+
+22. What is a replica in Kubernetes?
+A replica is a copy of an application Pod.
+
+23. Why is the application image pushed to Docker Hub?
+So Kubernetes can download the image and run the application.
+
+24. What is source code management?
+It tracks changes to code. Git is a commonly used source control tool.
+
+25. What triggers a CI/CD pipeline?
+It can be started manually or automatically by a code change, depending on Jenkins configuration.
+
+26. What is the purpose of the Jenkinsfile?
+It stores the pipeline instructions as code in the project repository.
+
+27. Why should passwords not be written directly in the Jenkinsfile?
+To protect secret information. Jenkins credentials can store them securely.
+
+28. What is deployment?
+Deployment means making an application available to run in its target environment.
+
+29. What happens if a Pod stops working?
+Kubernetes can create another Pod to maintain the required number of replicas.
+
+30. What is the main difference between Docker and Kubernetes?
+Docker packages and runs containers; Kubernetes manages containers across a cluster.
+
+31. Why is this called automation?
+Because Jenkins performs the build and deployment steps with less manual work.
+
+32. What is the role of GitHub in this practical?
+It stores the project code and pipeline files.
+
+33. What is an AI model application?
+It is an application that uses an AI model to make predictions or provide results.
+
+34. Does this pipeline train the AI model?
+Not necessarily. This practical automates building and deploying the application; model training must be added as a separate pipeline stage if required.
+
+35. What is the final result of this practical?
+Code is fetched from GitHub, packaged into a Docker image, and deployed to Kubernetes through Jenkins.
