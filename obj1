@@ -1,0 +1,247 @@
+
+# Practical 1: Git Bash — Multiplication Table and Greatest of Two Numbers
+
+## Aim
+To initialize a Git repository, upload it to GitHub, create a branch named `GIT-EXAM`, add Python programs, and compare the changes in the `main` and `GIT-EXAM` branches.
+
+## Requirements
+- Git installed on your computer
+- A GitHub account
+- Internet connection
+
+## 1. Create a project folder
+
+1. Go to your **Desktop**.
+2. Right-click an empty area.
+3. Select **New → Folder**.
+4. Name the folder `DataScienceProject`.
+5. Open the folder.
+6. Right-click an empty area inside the folder.
+7. Click **Open Git Bash here**.
+
+A black window called Git Bash will open. Type the commands below in that window, one at a time, and press **Enter** after each command.
+
+## 2. Set your Git name and email
+
+If you have not configured Git before, type:
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your-email@example.com"
+```
+
+Replace the sample name and email with your own name and the email connected to your GitHub account.
+
+## 3. Initialize the Git repository
+
+Type:
+
+```bash
+git init
+```
+
+This starts Git tracking in your project folder.
+
+## 4. Create a repository on GitHub
+
+1. Open your browser and go to **https://github.com**.
+2. Sign in.
+3. Click the **+** button near the top-right.
+4. Click **New repository**.
+5. Enter `DataScienceProject` as the repository name.
+6. Choose **Public** or **Private**.
+7. Leave **Add a README file** unchecked.
+8. Click **Create repository**.
+9. Copy the HTTPS address shown on the page.
+
+It will look like:
+
+`https://github.com/YOUR-GITHUB-USERNAME/DataScienceProject.git`
+
+## 5. Connect your folder to GitHub and push it
+
+Return to Git Bash. Replace the sample address with the address you copied from GitHub:
+
+```bash
+git remote add origin https://github.com/YOUR-GITHUB-USERNAME/DataScienceProject.git
+```
+
+Now type these commands one at a time:
+
+```bash
+git branch -M main
+git commit --allow-empty -m "Initial commit"
+git push -u origin main
+```
+
+If GitHub asks you to sign in, follow the instructions in your browser.
+
+Your repository is now on GitHub.
+
+## 6. Create `program1.py` for the multiplication table
+
+In Git Bash, type:
+
+```bash
+notepad program1.py
+```
+
+If Notepad asks whether to create the file, click **Yes**.
+
+Copy and paste this program:
+
+```python
+number = int(input("Enter a number: "))
+
+for i in range(1, 11):
+    print(number, "x", i, "=", number * i)
+```
+
+In Notepad, click **File → Save**, then close Notepad.
+
+### Run the program
+
+In Git Bash, type:
+
+```bash
+python program1.py
+```
+
+If that does not work, try:
+
+```bash
+py program1.py
+```
+
+Enter a number and press **Enter**. The program will print its multiplication table from 1 to 10.
+
+## 7. Commit and push `program1.py`
+
+In Git Bash, type:
+
+```bash
+git add program1.py
+git commit -m "Add multiplication table program"
+git push
+```
+
+### Check it on GitHub
+
+1. Open your repository on GitHub.
+2. Refresh the page.
+3. Confirm that `program1.py` is visible on the `main` branch.
+
+## 8. Create the `GIT-EXAM` branch
+
+In Git Bash, type:
+
+```bash
+git checkout -b GIT-EXAM
+```
+
+This creates the branch and switches to it.
+
+## 9. Create `program2.py` for the greatest of two numbers
+
+The question calls the file `program2`. Since it is a Python program, create it as `program2.py`.
+
+In Git Bash, type:
+
+```bash
+notepad program2.py
+```
+
+Click **Yes** if Notepad asks to create the file.
+
+Copy and paste:
+
+```python
+num1 = int(input("Enter the first number: "))
+num2 = int(input("Enter the second number: "))
+
+if num1 > num2:
+    print("The greatest number is", num1)
+elif num2 > num1:
+    print("The greatest number is", num2)
+else:
+    print("Both numbers are equal")
+```
+
+Click **File → Save**, then close Notepad.
+
+### Run the program
+
+In Git Bash, type:
+
+```bash
+python program2.py
+```
+
+If that does not work, try:
+
+```bash
+py program2.py
+```
+
+Enter two numbers and press **Enter** after each one.
+
+## 10. Commit and push the `GIT-EXAM` branch
+
+In Git Bash, type:
+
+```bash
+git add program2.py
+git commit -m "Add greatest of two numbers program"
+git push -u origin GIT-EXAM
+```
+
+### Check the branch on GitHub
+
+1. Open your repository on GitHub.
+2. Click the branch dropdown, which may show `main`.
+3. Select `GIT-EXAM`.
+4. Confirm that `program1.py` and `program2.py` are visible.
+
+## 11. Demonstrate the difference between `main` and `GIT-EXAM`
+
+1. On GitHub, select the `main` branch.
+2. Confirm that `program1.py` is visible and `program2.py` is not.
+3. Select the `GIT-EXAM` branch.
+4. Confirm that both `program1.py` and `program2.py` are visible.
+
+This shows that `program2.py` was added to `GIT-EXAM` and not directly to `main`.
+
+## Result
+A Git repository was initialized and pushed to GitHub. The multiplication table program was added to `main`. The `GIT-EXAM` branch was created, the greatest-of-two-numbers program was added and pushed, and the differences between the two branches were checked on GitHub.
+
+## Viva Questions and Answers
+
+**1. What is Git?**  
+Git is a version control system used to track changes in files.
+
+**2. What is GitHub?**  
+GitHub is an online platform for storing and sharing Git repositories.
+
+**3. What is a repository?**  
+A repository is a project folder whose changes are tracked by Git.
+
+**4. What is a branch?**  
+A branch is a separate line of work in a repository.
+
+**5. What is a commit?**  
+A commit saves changes in the repository’s history.
+
+**6. What does `git push` do?**  
+It uploads local commits to GitHub.
+
+**7. What does `git checkout -b` do?**  
+It creates a new branch and switches to it.
+
+**8. What is a multiplication table?**  
+It shows the products of a number multiplied by other numbers.
+
+**9. How does the program find the greatest number?**  
+It compares the two numbers using `if` and `elif`.
+
+**10. Why is `program2.py` visible only in `GIT-EXAM`?**  
+Because it was created and committed after switching to the `GIT-EXAM` branch.
