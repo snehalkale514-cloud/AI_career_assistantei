@@ -1,0 +1,372 @@
+# Practical 11: Set Up a Local Kubernetes Cluster Using Minikube to Deploy and Scale a Dockerized AI Application
+
+## Aim
+To set up a local Kubernetes cluster using Minikube, deploy a Dockerized application, and scale the application by increasing the number of replicas.
+
+## Requirements
+- Windows computer
+- Docker Desktop
+- Minikube
+- `kubectl`
+- Visual Studio Code
+- Python
+
+## Theory
+
+**Docker** packages an application and its required files into an image. A container is created from that image.
+
+**Kubernetes** manages containers. It can deploy applications, restart failed containers, and scale applications by running multiple copies.
+
+**Minikube** creates a small Kubernetes cluster on a local computer for learning and testing.
+
+**Scaling** means increasing or decreasing the number of running application replicas.
+
+## Application Files
+
+Create a folder named `ai-model-app` on the Desktop. Open it in VS Code and create these files:
+
+```text
+ai-model-app
+├── app.py
+├── requirements.txt
+├── Dockerfile
+└── deployment.yaml
+```
+
+### 1. Create `app.py`
+
+Paste this code:
+
+```python
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "AI Model Application is Running!"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+```
+
+### 2. Create `requirements.txt`
+
+Paste:
+
+```text
+Flask
+```
+
+### 3. Create `Dockerfile`
+
+Paste:
+
+```dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
+```
+
+## Procedure
+
+### Step 1: Start Docker Desktop
+
+1. Open Docker Desktop from the Windows Start menu.
+2. Wait until Docker Desktop shows that it is running.
+3. Open VS Code and open the `ai-model-app` folder.
+4. Select **Terminal → New Terminal**.
+
+Check Docker:
+
+```powershell
+docker --version
+```
+
+```powershell
+docker info
+```
+
+If either command fails, resolve the Docker issue before continuing.
+
+### Step 2: Build the Docker image
+
+In the VS Code terminal, move to the project folder:
+
+```powershell
+cd "$HOME\Desktop\ai-model-app"
+```
+
+Build the image:
+
+```powershell
+docker build -t ai-model-app:latest .
+```
+
+Check that the image exists:
+
+```powershell
+docker images
+```
+
+The list should contain `ai-model-app`.
+
+### Step 3: Check Minikube and kubectl
+
+Run:
+
+```powershell
+minikube version
+```
+
+```powershell
+kubectl version --client
+```
+
+If either command is not recognized, install that tool before continuing.
+
+### Step 4: Start the local Kubernetes cluster
+
+Make sure Docker Desktop is running, then run:
+
+```powershell
+minikube start --driver=docker
+```
+
+This creates a local Kubernetes cluster using Docker.
+
+Check the cluster:
+
+```powershell
+kubectl get nodes
+```
+
+The Minikube node should show status `Ready`.
+
+### Step 5: Load the Docker image into Minikube
+
+Minikube needs access to the image built on your computer. Load it with:
+
+```powershell
+minikube image load ai-model-app:latest
+```
+
+This makes the image available to the local Kubernetes cluster without pushing it to Docker Hub.
+
+### Step 6: Create `deployment.yaml`
+
+Open `deployment.yaml` in VS Code and paste:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-model-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-model-app
+  template:
+    metadata:
+      labels:
+        app: ai-model-app
+    spec:
+      containers:
+        - name: ai-model-app
+          image: ai-model-app:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+```
+
+Save the file with **Ctrl + S**.
+
+### Step 7: Deploy the application
+
+In the terminal, make sure you are inside the project folder:
+
+```powershell
+cd "$HOME\Desktop\ai-model-app"
+```
+
+Apply the deployment:
+
+```powershell
+kubectl apply -f deployment.yaml
+```
+
+Check the deployment:
+
+```powershell
+kubectl get deployments
+```
+
+Check the pod:
+
+```powershell
+kubectl get pods
+```
+
+Wait until the pod shows status `Running`.
+
+### Step 8: Open the application
+
+Run:
+
+```powershell
+kubectl port-forward deployment/ai-model-app 5000:5000
+```
+
+Keep this terminal open.
+
+Open a browser and visit:
+
+`http://localhost:5000`
+
+The page should display:
+
+**AI Model Application is Running!**
+
+### Step 9: Scale the application
+
+Open a **second VS Code terminal**. Keep the port-forward terminal running.
+
+Increase the number of replicas from 1 to 3:
+
+```powershell
+kubectl scale deployment ai-model-app --replicas=3
+```
+
+Check the deployment:
+
+```powershell
+kubectl get deployments
+```
+
+Check the pods:
+
+```powershell
+kubectl get pods
+```
+
+You should see three application pods running. Kubernetes creates additional copies of the application to match the requested replica count.
+
+### Step 10: Scale the application down
+
+To reduce the number of replicas to 1, run:
+
+```powershell
+kubectl scale deployment ai-model-app --replicas=1
+```
+
+Check again:
+
+```powershell
+kubectl get deployments
+```
+
+```powershell
+kubectl get pods
+```
+
+Kubernetes should reduce the running pods to one.
+
+## Sample Output
+
+After starting Minikube:
+
+```text
+NAME       STATUS   ROLES           AGE   VERSION
+minikube   Ready    control-plane   ...   ...
+```
+
+After deploying the application:
+
+```text
+NAME           READY   UP-TO-DATE   AVAILABLE
+ai-model-app   1/1     1            1
+```
+
+After scaling to three replicas:
+
+```text
+NAME           READY   UP-TO-DATE   AVAILABLE
+ai-model-app   3/3     3            3
+```
+
+The exact pod names and timing may differ.
+
+## Explanation of Important Commands
+
+| Command | Purpose |
+|---|---|
+| `docker build` | Builds a Docker image from the Dockerfile |
+| `minikube start` | Starts the local Kubernetes cluster |
+| `minikube image load` | Makes the Docker image available inside Minikube |
+| `kubectl apply -f deployment.yaml` | Creates or updates the Kubernetes deployment |
+| `kubectl get pods` | Shows the application pods and their status |
+| `kubectl scale deployment ... --replicas=3` | Changes the deployment to run three replicas |
+| `kubectl port-forward` | Lets the browser access the application through a local port |
+
+## Result
+A local Kubernetes cluster was created using Minikube. The Dockerized application was deployed successfully and scaled from one replica to three replicas, then scaled back to one replica.
+
+## Viva Questions and Answers
+
+**1. What is Kubernetes?**  
+Kubernetes is a system used to deploy and manage containerized applications.
+
+**2. What is Minikube?**  
+Minikube runs a small Kubernetes cluster on a local computer.
+
+**3. What is Docker?**  
+Docker packages an application and its required files into an image that can run as a container.
+
+**4. What is a container?**  
+A container is a running instance of an application image.
+
+**5. What is a pod?**  
+A pod is the smallest unit Kubernetes runs. It contains one or more containers.
+
+**6. What is a deployment?**  
+A deployment manages application pods and keeps the requested number of replicas running.
+
+**7. What does scaling mean?**  
+Scaling means increasing or decreasing the number of application replicas.
+
+**8. What does `replicas: 3` mean?**  
+It tells Kubernetes to run three copies of the application.
+
+**9. What is `kubectl`?**  
+`kubectl` is a command-line tool used to communicate with Kubernetes.
+
+**10. Why do we use `minikube image load`?**  
+It loads the locally built Docker image into Minikube so Kubernetes can use it.
+
+**11. What does `kubectl get pods` do?**  
+It displays the pods and their current status.
+
+**12. What does `kubectl scale` do?**  
+It changes the number of replicas in a deployment.
+
+**13. Why do we use `port-forward`?**  
+It allows us to open the application in a browser through a local port.
+
+**14. What is the purpose of a Dockerfile?**  
+A Dockerfile contains instructions for building a Docker image.
+
+**15. What is the result of this practical?**  
+The application was deployed on a local Kubernetes cluster and scaled by changing its replica count.
+
+## Important Note
+This Flask application is a simple demonstration of container deployment and scaling. It does not train or run an actual AI model.
